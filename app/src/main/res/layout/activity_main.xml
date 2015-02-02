@@ -1,0 +1,95 @@
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.appRS.tab2.MainActivity"
+    tools:ignore="MergeRootFrame" >
+
+    <Button
+        android:id="@+id/butStand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="438dp"
+        android:layout_y="300dp"
+        android:text="@string/butStand" />
+
+    <Button
+        android:id="@+id/butSit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="253dp"
+        android:layout_y="296dp"
+        android:text="@string/butSit" />
+
+    <Button
+        android:id="@+id/butConnexion"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="345dp"
+        android:layout_y="85dp"
+        android:text="@string/butConnexion" />
+
+    <Button
+        android:id="@+id/butAnimation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="342dp"
+        android:layout_y="436dp"
+        android:text="@string/butAnimation" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="62dp"
+        android:layout_marginTop="96dp"
+        android:layout_x="489dp"
+        android:layout_y="99dp"
+        android:text="@string/hello_world" />
+
+    <Button
+        android:id="@+id/butArret"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="443dp"
+        android:layout_y="592dp"
+        android:text="@string/butArret" />
+
+    <Button
+        android:id="@+id/butViens"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="274dp"
+        android:layout_y="593dp"
+        android:text="@string/butViens" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="16dp"
+        android:layout_y="602dp"
+        android:text="@string/textRecoVocale"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <Button
+        android:id="@+id/butSuiviVisage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="328dp"
+        android:layout_y="744dp"
+        android:text="@string/butSuiviVisage" />
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_x="46dp"
+        android:layout_y="94dp"
+        android:ems="10"
+        android:inputType="text"
+        android:text="@string/textIP" />
+
+</AbsoluteLayout>
