@@ -13,8 +13,6 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="false"
         android:id="@+id/linearLayoutVert">
 
         <FrameLayout
@@ -173,6 +171,16 @@
                     android:layout_column="8"
                     android:layout_margin="10dp" />
             </GridLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Adresse IP du Gestionnaire de communication"
+                android:id="@+id/textView"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:textSize="20dp"
+                android:layout_gravity="left|top" />
         </FrameLayout>
 
         <FrameLayout
@@ -217,7 +225,8 @@
                     android:text="Liste des fonctionnalités"
                     android:textSize="20dp"
                     android:textStyle="bold"
-                    android:layout_margin="5dp" />
+                    android:layout_margin="5dp"
+                    android:layout_gravity="center" />
 
                 <ListView
                     android:layout_width="380dp"
@@ -226,7 +235,8 @@
                     android:layout_row="4"
                     android:layout_column="0"
                     android:background="#ffbcf5ff"
-                    android:choiceMode="singleChoice" />
+                    android:choiceMode="singleChoice"
+                    android:layout_gravity="center" />
 
                 <ListView
                     android:layout_width="380dp"
@@ -235,7 +245,8 @@
                     android:layout_row="4"
                     android:layout_column="1"
                     android:background="#ffffc8b5"
-                    android:choiceMode="singleChoice" />
+                    android:choiceMode="singleChoice"
+                    android:layout_gravity="center" />
 
             </GridLayout>
         </RelativeLayout>
@@ -449,7 +460,7 @@
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/editText2"
+                        android:id="@+id/editTextIPRobot1"
                         android:inputType="number"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
@@ -478,7 +489,7 @@
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/editText3"
+                        android:id="@+id/editTextIPRobot2"
                         android:inputType="number"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
@@ -507,7 +518,7 @@
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/editText4"
+                        android:id="@+id/editTextIPRobot3"
                         android:inputType="number"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
@@ -536,7 +547,7 @@
                     <EditText
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/editText5"
+                        android:id="@+id/editTextIPRobot4"
                         android:inputType="number"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
