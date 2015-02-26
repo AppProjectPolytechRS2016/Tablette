@@ -2,4 +2,29 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Define the dimensions to use for component if the device is a 10" -->
+
+    <!-- Dimensions for the blocks that form the layout of the app -->
+    <dimen name="titleBlock_editText_height_10inches">50dp</dimen>
+    <dimen name="ipBlock_editText_height_10inches">100dp</dimen>
+    <dimen name="listBlock_editText_height_10inches">450dp</dimen>
+    <dimen name="orderBlock_editText_height_10inches">300dp</dimen>
+    <dimen name="spaceBlock_editText_height_10inches">20dp</dimen>
+
+    <!-- Define the text sizes to use -->
+    <dimen name="title_textSize_10inches">30dp</dimen>
+    <dimen name="subtitle_textSize_10inches">20dp</dimen>
+    <dimen name="body_textSize_10inches">14dp</dimen>
+    <dimen name="button_textSize_10inches">18dp</dimen>
+
+    <!-- Dimensions for IP address -->
+    <dimen name="ip_editText_height_10inches">35dp</dimen>
+    <dimen name="ip_editText_width_10inches">100dp</dimen>
+    <dimen name="ip_dot_textSize_10inches">20dp</dimen>
+    <dimen name="ip_dot_textHeight_10inches">35dp</dimen>
+    <dimen name="ip_dot_topMargin_10inches">15dp</dimen>
+
+
+
 </resources>
