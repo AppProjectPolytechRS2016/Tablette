@@ -1,7 +1,7 @@
 <resources>
     <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="activity_horizontal_margin">2dp</dimen>
+    <dimen name="activity_vertical_margin">2dp</dimen>
 
     <!-- Define the dimensions to use for component if the device is a 10" -->
 
@@ -15,6 +15,7 @@
 	<dimen name="listView_height_10inches">420dp</dimen>
 	<dimen name="tableOrder_width_10inches">400dp</dimen>
 	<dimen name="tableOrder_height_10inches">60dp</dimen>
+	<dimen name="sendBlock_height_10inches">50dp</dimen>
 	
     <!-- Define the text sizes to use -->
     <dimen name="title_textSize_10inches">30dp</dimen>
