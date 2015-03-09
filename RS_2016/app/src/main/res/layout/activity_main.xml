@@ -9,7 +9,9 @@
     android:id="@+id/background">
 <ScrollView
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:focusableInTouchMode="false"
+    android:focusable="true">
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
@@ -19,7 +21,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/title_textSize_10inches"
+            android:layout_height="@dimen/titleBlock_editText_height_10inches"
             android:background="#ffff9ea6"
             android:id="@+id/titleBlock">
 
@@ -30,7 +32,8 @@
                 android:layout_gravity="center"
                 android:text="APP RS 2016 - Gestion des robots"
                 android:textSize="@dimen/title_textSize_10inches"
-                android:textColor="#ffff1f34" />
+                android:textColor="#ffff1f34"
+                android:gravity="center_vertical|center_horizontal" />
 
         </FrameLayout>
 
@@ -620,25 +623,33 @@
             android:id="@+id/space4"></FrameLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#ffdba3ff"
             android:id="@+id/debugBlock">
 
             <TextView
-                android:layout_width="300dp"
-                android:layout_height="100dp"
-                android:text="New Text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="IP Gest. Com"
                 android:id="@+id/debugIPCM"
                 android:textSize="20dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="New Text"
+                android:text="IP Robot"
                 android:id="@+id/debugIPRobot"
                 android:textSize="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="IP Tablet"
+                android:id="@+id/debugIPTablet"
+                android:textSize="20dp" />
+
         </LinearLayout>
 
     </LinearLayout>
