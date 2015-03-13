@@ -18,7 +18,7 @@
 	<dimen name="sendBlock_height_10inches">50dp</dimen>
 	
     <!-- Define the text sizes to use -->
-    <dimen name="title_textSize_10inches">25dp</dimen>
+    <dimen name="title_textSize_10inches">30dp</dimen>
     <dimen name="subtitle_textSize_10inches">20dp</dimen>
     <dimen name="body_textSize_10inches">15dp</dimen>
     <dimen name="button_textSize_10inches">16dp</dimen>

@@ -1,8 +1,6 @@
 package com.app.rs_2016;
 
-//Import libraries for layout elements
-import android.content.Context;
-import android.net.wifi.WifiInfo;
+//Import of the libraries
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,10 +11,7 @@ import android.widget.ListView;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
 import android.view.View;
-import android.net.wifi.WifiManager;
-
-//Import libraries for JSON
-import org.json.*;
+import android.widget.Toast;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -45,23 +40,14 @@ public class MainActivity extends ActionBarActivity {
 
     private TextView    debugTextIPCM ;
     private TextView    debugTextIPRobot;
-    private TextView    debugTextIPTablet;
 
-    private int         iByteCMIP1_Value ;
-    private int         iByteCMIP2_Value ;
-    private int         iByteCMIP3_Value ;
-    private int         iByteCMIP4_Value ;
-    private String      strIPCM ;
-
-    private int         iByteRobotIP1_Value ;
-    private int         iByteRobotIP2_Value ;
-    private int         iByteRobotIP3_Value ;
-    private int         iByteRobotIP4_Value ;
+    private int         iOctet1IPValue ;
+    private int         iOctet2IPValue ;
+    private int         iOctet3IPValue ;
+    private int         iOctet4IPValue ;
     private String      strIPRobot ;
-
+    private String      strIPCM ;
     public boolean      bCheckResult ;
-
-    private String tabletAddress ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,70 +79,36 @@ public class MainActivity extends ActionBarActivity {
 
         this.debugTextIPCM          = (TextView)this.findViewById(R.id.debugIPCM);
         this.debugTextIPRobot       = (TextView)this.findViewById(R.id.debugIPRobot);
-        this.debugTextIPTablet      = (TextView)this.findViewById(R.id.debugIPTablet);
 
         //Set links for the lists
         this.robotList              = (ListView)this.findViewById(R.id.listViewRobot) ;
         this.featuresList           = (ListView)this.findViewById(R.id.listViewFeatures) ;
-
-        //Recover the IP address of the tablet
-        WifiManager wifiMgr         = (WifiManager)getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo           = wifiMgr.getConnectionInfo();
-        int ip                      = wifiInfo.getIpAddress();
-
-        //Convert to IP format
-        tabletAddress               = String.format("%d.%d.%d.%d", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff), (ip >> 24 & 0xff));
-
-        debugTextIPTablet.setText("IP Tablet: : " + tabletAddress);
 
         //Set the click listeners for the buttons
         buttonConnexionCM.setOnClickListener(
             new OnClickListener() {
                 public void onClick(View v) {
 
-                    //Recover each byte value of the IP
-                    iByteCMIP1_Value = Integer.parseInt(editTextIPOctect1CM.getText().toString());
-                    iByteCMIP2_Value = Integer.parseInt(editTextIPOctect2CM.getText().toString());
-                    iByteCMIP3_Value = Integer.parseInt(editTextIPOctect3CM.getText().toString());
-                    iByteCMIP4_Value = Integer.parseInt(editTextIPOctect4CM.getText().toString());
+                    iOctet1IPValue  = Integer.parseInt(editTextIPOctect1CM.getText().toString());
+                    iOctet2IPValue  = Integer.parseInt(editTextIPOctect2CM.getText().toString());
+                    iOctet3IPValue  = Integer.parseInt(editTextIPOctect3CM.getText().toString());
+                    iOctet4IPValue  = Integer.parseInt(editTextIPOctect4CM.getText().toString());
 
-                    bCheckResult = CheckUserChoice.checkIP(iByteCMIP1_Value, iByteCMIP2_Value, iByteCMIP3_Value, iByteCMIP4_Value);
+                    bCheckResult    = CheckUserChoice.checkIP(iOctet1IPValue, iOctet2IPValue, iOctet3IPValue, iOctet4IPValue);
 
-                    //Display for debug
-                    strIPCM = "IP CM : " + iByteCMIP1_Value + "." + iByteCMIP2_Value + "." + iByteCMIP3_Value + "." + iByteCMIP4_Value + " Check Res = " + String.valueOf(bCheckResult);
+                    strIPCM         = "IP CM : " + iOctet1IPValue + "." + iOctet2IPValue + "." + iOctet3IPValue + "." + iOctet4IPValue + " Check Res = " + bCheckResult ;
                     debugTextIPCM.setText(strIPCM);
 
-                    //Treatment to do if the IP is valid
-                    if (bCheckResult == true) {
-                        JSONObject jsonIdentif      = new JSONObject();
-                        try {
-                            jsonIdentif.put("From", tabletAddress);
-                            jsonIdentif.put("To", strIPCM);
-                            jsonIdentif.put("Type", "Identification");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
                 }
             });
 
         buttonSend.setOnClickListener(
                 new OnClickListener() {
                     public void onClick(View v) {
+                        strIPCM         = "IP CM : " +editTextIPOctect1Robot.getText().toString() + "." + editTextIPOctect2Robot.getText().toString() + "." + editTextIPOctect3Robot.getText().toString()
+                                + "." + editTextIPOctect4Robot.getText().toString();
+                        debugTextIPCM.setText(strIPRobot);
 
-                        //Recover each byte value of the IP
-                        iByteRobotIP1_Value  = Integer.parseInt(editTextIPOctect1Robot.getText().toString());
-                        iByteRobotIP2_Value  = Integer.parseInt(editTextIPOctect2Robot.getText().toString());
-                        iByteRobotIP3_Value  = Integer.parseInt(editTextIPOctect3Robot.getText().toString());
-                        iByteRobotIP4_Value  = Integer.parseInt(editTextIPOctect4Robot.getText().toString());
-
-                        bCheckResult    = CheckUserChoice.checkIP(iByteRobotIP1_Value, iByteRobotIP2_Value, iByteRobotIP3_Value, iByteRobotIP4_Value);
-
-
-                        //Display for debug
-                        strIPRobot         = "IP Robot : " + iByteRobotIP1_Value + "." + iByteRobotIP2_Value + "." + iByteRobotIP3_Value + "." + iByteRobotIP4_Value + " Check Res = " + String.valueOf(bCheckResult) ;
-                        debugTextIPRobot.setText(strIPRobot);
                     }
                 });
     }
