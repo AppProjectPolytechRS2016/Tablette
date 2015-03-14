@@ -620,25 +620,42 @@
             android:id="@+id/space4"></FrameLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#ffdba3ff"
             android:id="@+id/debugBlock">
 
             <TextView
-                android:layout_width="300dp"
-                android:layout_height="100dp"
-                android:text="New Text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="IP CM"
                 android:id="@+id/debugIPCM"
                 android:textSize="20dp" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Text"
+                android:text="IP Robot"
                 android:id="@+id/debugIPRobot"
                 android:textSize="20dp" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/debugIPTablet"
+                android:textSize="20dp"
+                android:text="IP Tablette" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Envoyer"
+                android:id="@+id/buttonSendTestPhone"
+                android:layout_marginLeft="@dimen/button_default_margin_10inches"
+                android:layout_marginTop="@dimen/small_margin_10inches"
+                android:layout_marginRight="@dimen/default_margin_10inches"
+                android:textSize="@dimen/button_textSize_10inches" />
         </LinearLayout>
 
     </LinearLayout>
