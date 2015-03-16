@@ -15,49 +15,55 @@ import android.view.View;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiInfo;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 public class MainActivity extends ActionBarActivity {
     //Declaration of the different elements
-    private Button      buttonConnexionCM ;
-    private Button      buttonDeconnexionCM ;
-    private Button      buttonReccord ;
-    private Button      buttonWalk ;
-    private Button      buttonMove ;
-    private Button      buttonSend ;
+    private Button              buttonConnexionCM ;
+    private Button              buttonDeconnexionCM ;
+    private Button              buttonReccord ;
+    private Button              buttonWalk ;
+    private Button              buttonMove ;
+    private Button              buttonSend ;
 
-    private EditText    editTextIPOctect1CM ;
-    private EditText    editTextIPOctect2CM ;
-    private EditText    editTextIPOctect3CM ;
-    private EditText    editTextIPOctect4CM ;
-    private EditText    editTextIPOctect1Robot ;
-    private EditText    editTextIPOctect2Robot ;
-    private EditText    editTextIPOctect3Robot ;
-    private EditText    editTextIPOctect4Robot ;
-    private EditText    editTextXVal ;
-    private EditText    editTextYVal ;
-    private EditText    editTextAngleVal ;
+    private EditText            editTextIPOctect1CM ;
+    private EditText            editTextIPOctect2CM ;
+    private EditText            editTextIPOctect3CM ;
+    private EditText            editTextIPOctect4CM ;
+    private EditText            editTextIPOctect1Robot ;
+    private EditText            editTextIPOctect2Robot ;
+    private EditText            editTextIPOctect3Robot ;
+    private EditText            editTextIPOctect4Robot ;
+    private EditText            editTextXVal ;
+    private EditText            editTextYVal ;
+    private EditText            editTextAngleVal ;
 
-    private ListView    robotList ;
-    private ListView    featuresList ;
+    private ListView            robotList ;
+    private ListView            featuresList ;
 
-    private TextView    debugTextIPCM ;
-    private TextView    debugTextIPRobot;
-    private TextView    debugTextIPTablet;
+    private TextView            debugTextIPCM ;
+    private TextView            debugTextIPRobot;
+    private TextView            debugTextIPTablet;
 
-    private int         iOctet1IPValue ;
-    private int         iOctet2IPValue ;
-    private int         iOctet3IPValue ;
-    private int         iOctet4IPValue ;
+    private int                 iOctet1IPValue ;
+    private int                 iOctet2IPValue ;
+    private int                 iOctet3IPValue ;
+    private int                 iOctet4IPValue ;
 
-    private int         iByteRobotIP1_Value ;
-    private int         iByteRobotIP2_Value ;
-    private int         iByteRobotIP3_Value ;
-    private int         iByteRobotIP4_Value ;
+    private int                 iByteRobotIP1_Value ;
+    private int                 iByteRobotIP2_Value ;
+    private int                 iByteRobotIP3_Value ;
+    private int                 iByteRobotIP4_Value ;
 
-    private String      strIPRobot ;
-    private String      strIPCM ;
-    private String      tabletAddress;
-    public boolean      bCheckResult ;
+    private String              strIPRobot ;
+    private String              strIPCM ;
+    private String              tabletAddress;
+    private int                 iPortCMNum      = 6020;
+    public boolean              bCheckResult ;
+
+    private ApplicationTablet   appTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,23 +115,30 @@ public class MainActivity extends ActionBarActivity {
 
         //Set the click listeners for the Connexion button
         buttonConnexionCM.setOnClickListener(
-            new OnClickListener() {
-                public void onClick(View v) {
-                    //Recover each byte value of the IP
-                    iOctet1IPValue  = Integer.parseInt(editTextIPOctect1CM.getText().toString());
-                    iOctet2IPValue  = Integer.parseInt(editTextIPOctect2CM.getText().toString());
-                    iOctet3IPValue  = Integer.parseInt(editTextIPOctect3CM.getText().toString());
-                    iOctet4IPValue  = Integer.parseInt(editTextIPOctect4CM.getText().toString());
+                new OnClickListener() {
+                    public void onClick(View v) {
+                        //Recover each byte value of the IP
+                        iOctet1IPValue = Integer.parseInt(editTextIPOctect1CM.getText().toString());
+                        iOctet2IPValue = Integer.parseInt(editTextIPOctect2CM.getText().toString());
+                        iOctet3IPValue = Integer.parseInt(editTextIPOctect3CM.getText().toString());
+                        iOctet4IPValue = Integer.parseInt(editTextIPOctect4CM.getText().toString());
 
-                    //Check if the IP address is valid
-                    bCheckResult    = CheckUserChoice.checkIP(iOctet1IPValue, iOctet2IPValue, iOctet3IPValue, iOctet4IPValue);
+                        //Check if the IP address is valid
+                        bCheckResult = CheckUserChoice.checkIP(iOctet1IPValue, iOctet2IPValue, iOctet3IPValue, iOctet4IPValue);
 
-                    //Display for debug
-                    strIPCM         = "IP CM : " + iOctet1IPValue + "." + iOctet2IPValue + "." + iOctet3IPValue + "." + iOctet4IPValue + " Check Res = " + bCheckResult ;
-                    debugTextIPCM.setText(strIPCM);
+                        //Display for debug
+                        strIPCM = "IP CM : " + iOctet1IPValue + "." + iOctet2IPValue + "." + iOctet3IPValue + "." + iOctet4IPValue + " Check Res = " + bCheckResult;
+                        debugTextIPCM.setText(strIPCM);
 
-                }
-            });
+                        ExecutorService execServ = Executors.newFixedThreadPool(3);
+                        appTab                   = new ApplicationTablet(strIPCM, iPortCMNum, execServ);
+                        appTab.connexionCM(strIPCM, iPortCMNum);
+                      //  execServ.execute(appTab);
+
+
+
+                    }
+                });
 
         buttonSend.setOnClickListener(
                 new OnClickListener() {
