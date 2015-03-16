@@ -2,6 +2,7 @@ package com.app.rs_2016;
 
 //Import of the libraries
 import android.content.Context;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,7 +15,12 @@ import android.widget.TextView;
 import android.view.View;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiInfo;
+import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -47,6 +53,8 @@ public class MainActivity extends ActionBarActivity {
     private TextView            debugTextIPRobot;
     private TextView            debugTextIPTablet;
 
+    private TextView            infoDebug;
+
     private int                 iOctet1IPValue ;
     private int                 iOctet2IPValue ;
     private int                 iOctet3IPValue ;
@@ -57,8 +65,8 @@ public class MainActivity extends ActionBarActivity {
     private int                 iByteRobotIP3_Value ;
     private int                 iByteRobotIP4_Value ;
 
-    private String              strIPRobot ;
-    private String              strIPCM ;
+    private String              strIPRobot      = null;
+    private String              strIPCM         = null;
     private String              tabletAddress;
     private int                 iPortCMNum      = 6020;
     public boolean              bCheckResult ;
@@ -69,6 +77,13 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //To add to enable the connexion to the comManager
+        if (android.os.Build.VERSION.SDK_INT > 9)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 
         //Set links for the buttons
         this.buttonConnexionCM      = (Button)this.findViewById(R.id.buttonConnexionCM) ;
@@ -98,10 +113,14 @@ public class MainActivity extends ActionBarActivity {
         this.debugTextIPCM          = (TextView)this.findViewById(R.id.debugIPCM);
         this.debugTextIPRobot       = (TextView)this.findViewById(R.id.debugIPRobot);
         this.debugTextIPTablet       = (TextView)this.findViewById(R.id.debugIPTablet);
+        this.infoDebug              = (TextView)this.findViewById(R.id.infoDebug);
 
         //Set links for the lists
         this.robotList              = (ListView)this.findViewById(R.id.listViewRobot) ;
         this.featuresList           = (ListView)this.findViewById(R.id.listViewFeatures) ;
+
+        //Hide de Deconnexion button
+        buttonDeconnexionCM.setVisibility(View.INVISIBLE);
 
         //Recover the IP address of the tablet
         WifiManager wifiMgr         = (WifiManager)getSystemService(Context.WIFI_SERVICE);
@@ -127,13 +146,32 @@ public class MainActivity extends ActionBarActivity {
                         bCheckResult = CheckUserChoice.checkIP(iOctet1IPValue, iOctet2IPValue, iOctet3IPValue, iOctet4IPValue);
 
                         //Display for debug
-                        strIPCM = "IP CM : " + iOctet1IPValue + "." + iOctet2IPValue + "." + iOctet3IPValue + "." + iOctet4IPValue + " Check Res = " + bCheckResult;
-                        debugTextIPCM.setText(strIPCM);
+                       // strIPCM = iOctet1IPValue + "." + iOctet2IPValue + "." + iOctet3IPValue + "." + iOctet4IPValue ;
+                        strIPCM                     = String.format("%d.%d.%d.%d", iOctet1IPValue, iOctet2IPValue, iOctet3IPValue, iOctet4IPValue);
+                        debugTextIPCM.setText("IP CM : " + strIPCM + " Check Res = " + bCheckResult);
 
-                        ExecutorService execServ = Executors.newFixedThreadPool(3);
-                        appTab                   = new ApplicationTablet(strIPCM, iPortCMNum, execServ);
-                        appTab.connexionCM(strIPCM, iPortCMNum);
-                      //  execServ.execute(appTab);
+                        if(bCheckResult == true) {
+                            ExecutorService execServ    = Executors.newFixedThreadPool(3);
+                            appTab                      = new ApplicationTablet("tablet", iPortCMNum, execServ);
+                            int iTest                   = appTab.connexionCM(strIPCM, iPortCMNum);
+
+
+                            if(iTest == 1) {
+                                Toast.makeText(MainActivity.this, "La tablette est maintenant connectée au gestionnaire de communication.", Toast.LENGTH_LONG).show();
+
+                                //Hide the connexion button and display the deconnexion button
+                                buttonConnexionCM.setVisibility(View.INVISIBLE);
+                                buttonDeconnexionCM.setVisibility(View.INVISIBLE);
+                            }
+
+                            else{
+                                Toast.makeText(MainActivity.this, "La tablette n'est pas connectée au gestionnaire de communication.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        else{
+                            Toast.makeText(MainActivity.this, "L'adresse IP renseignée est invalide.", Toast.LENGTH_LONG).show();
+                        }
 
 
 
@@ -159,6 +197,15 @@ public class MainActivity extends ActionBarActivity {
 
                     }
                 });
+
+        buttonDeconnexionCM.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                }
+        );
     }
 
 

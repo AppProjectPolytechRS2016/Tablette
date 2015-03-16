@@ -19,13 +19,13 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/title_textSize_10inches"
+            android:layout_height="@dimen/titleBlock_editText_height_10inches"
             android:background="#ffff9ea6"
             android:id="@+id/titleBlock">
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/textViewAppTitle"
                 android:layout_gravity="center"
                 android:text="APP RS 2016 - Gestion des robots"
@@ -646,6 +646,13 @@
                 android:id="@+id/debugIPTablet"
                 android:textSize="20dp"
                 android:text="IP Tablette" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="infos"
+                android:id="@+id/infoDebug"
+                android:textSize="20dp" />
 
             <Button
                 android:layout_width="wrap_content"

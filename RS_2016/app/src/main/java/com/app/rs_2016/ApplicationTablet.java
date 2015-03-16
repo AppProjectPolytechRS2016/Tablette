@@ -1,22 +1,24 @@
 package com.app.rs_2016;
 
 //Import libraries
-import org.json.* ;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
-import android.util.Log;
+import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
- * Created by Sarion on 14/03/2015.
+ * Created by Marion on 14/03/2015.
  */
 public class ApplicationTablet {
 
     ExecutorService             execServ;
-    Socket                      socketClient;
+    Socket                      socketClient    = null;
 
     private String              strName;
     private String              strIPTablet;
@@ -25,6 +27,7 @@ public class ApplicationTablet {
     private DataInputStream     in;
     private DataOutputStream    out;
     private boolean             bRun;
+    private char                sId             = '1' ;
 
     public ApplicationTablet(String strName, int iPortNum, ExecutorService execServ) {
         this.strName    = strName;
@@ -32,37 +35,52 @@ public class ApplicationTablet {
         this.execServ   = execServ;
     }
 
-    public boolean connexionCM(String IPCMAddress, int iPortNum)
+    public int connexionCM(String IPCMAddress, int iPortNum)
     {
         try
         {
-            socketClient    = new Socket ();
-            socketClient.bind(null);
-            socketClient.connect(new InetSocketAddress(IPCMAddress,iPortNum), 10000);  //Connexion au gestionneaire de communication
+            socketClient    = new Socket(IPCMAddress, iPortNum);
+          //  socketClient.bind(null);
+            //socketClient.connect(new InetSocketAddress(IPCMAddress,iPortNum), 10000);
         }
         catch (IOException ex){
-            return false;
+            return -1;
         }
 
         if(socketClient.isConnected()){
             try {
-                this.in     = new DataInputStream(socketClient.getInputStream());    //Definition du canal reseau venant du serveur
+
+                //Define the network stream from the comManager
+                this.in     = new DataInputStream(socketClient.getInputStream());
                 this.out    = new DataOutputStream(socketClient.getOutputStream());
+                NetworkFlow.writeMessage(out, "0" + sId);
+
+                //
+           /*    JSONObject jsonIdent        = new org.json.JSONObject();
+
+                try {
+                    jsonIdent.put("From", tabletAddress);
+                    jsonIdent.put("From", IPCMAddress);
+                    jsonIdent.put("Type", "Identification");
+                }
+                catch (JSONException e) {
+                    e.printStackTrace();
+                }*/
+
             }
             catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            return true;
+            return 1;
         }
         else{
-            return false;
+            return 0;
         }
     }
 
     public void deconnexionCM()
     {
-
     }
 
     public void sendOrder(JSONObject order)

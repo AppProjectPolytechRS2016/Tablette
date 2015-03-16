@@ -2,26 +2,31 @@ package com.app.rs_2016;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 
 /**
- * Created by Sarion on 14/03/2015.
+ * Created by Jérôme.
  */
-public class NetworkFlow {
 
-    public String readMsg(DataInputStream inStream) throws IOException
+
+public class NetworkFlow
+{
+    /**Methode permettant de lire le flux reseau d'entree et de convertir ce qui a ete lue en String*/
+    public static String readMessage(DataInputStream in) throws IOException,EOFException
     {
-        int taille      = inStream.readInt();
-        byte message[]  = new byte[taille];
-        int nb          = inStream.read(message,0,taille);
-        System.out.println(nb);
+        int taille = in.readInt();
+        byte message[]=new byte[taille];
+        int nb = in.read(message,0,taille);
         return new String(message);
     }
 
-    public static void sendMsg(DataOutputStream out, String s) throws IOException
+    /**Methode permettant d'ecrire un message sur le flux reseau de sortie */
+    public static void writeMessage(DataOutputStream out, String s) throws IOException
     {
-        byte message[]    = s.getBytes();
+        byte message[] = s.getBytes();
         out.writeInt(message.length);
         out.write(message);
     }
 }
+
