@@ -27,21 +27,35 @@ public class ApplicationTablet {
     private DataInputStream     in;
     private DataOutputStream    out;
     private boolean             bRun;
-    private char                sId             = '1' ;
 
+
+    /**
+     * @Function : ApplicationTablet
+     * @param strName : the name of the device
+     * @param iPortNum : port number for the communication with the comManager
+     * @param execServ : executor service to use
+     * @Description : Constructor
+     */
     public ApplicationTablet(String strName, int iPortNum, ExecutorService execServ) {
         this.strName    = strName;
         this.iPortNum   = iPortNum;
         this.execServ   = execServ;
     }
 
-    public int connexionCM(String IPCMAddress, int iPortNum)
+
+    /**
+     * @Function : connexionCM
+     * @param IPCMAddress : IP address of the comManager
+     * @param iPortNum : port number used for the communication with the comManager
+     * @param IPTablet : IP address of the tabler
+     * @return : an interger ; if 1 the connexion has been established
+     * @Description : Connect the tablet to the comManager
+     */
+    public int logINCM(String IPCMAddress, int iPortNum, String IPTablet)
     {
         try
         {
             socketClient    = new Socket(IPCMAddress, iPortNum);
-          //  socketClient.bind(null);
-            //socketClient.connect(new InetSocketAddress(IPCMAddress,iPortNum), 10000);
         }
         catch (IOException ex){
             return -1;
@@ -53,24 +67,28 @@ public class ApplicationTablet {
                 //Define the network stream from the comManager
                 this.in     = new DataInputStream(socketClient.getInputStream());
                 this.out    = new DataOutputStream(socketClient.getOutputStream());
-                NetworkFlow.writeMessage(out, "0" + sId);
 
-                //
-           /*    JSONObject jsonIdent        = new org.json.JSONObject();
+                //Create the JSONObject for the identification of the tablet
+               JSONObject jsonIdent     = new JSONObject();
 
-                try {
-                    jsonIdent.put("From", tabletAddress);
-                    jsonIdent.put("From", IPCMAddress);
-                    jsonIdent.put("Type", "Identification");
+               try {
+                    jsonIdent.put("From", IPTablet);
+                    jsonIdent.put("To", IPCMAddress);
+                    jsonIdent.put("MsgType", "Ident");
+                    jsonIdent.put("EquipmentType", "Tablet");
                 }
                 catch (JSONException e) {
                     e.printStackTrace();
-                }*/
+                }
+
+                //Send the JSONObject in a String format
+                this.writeMessageOnFlow(jsonIdent.toString());
 
             }
             catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
+                return -1;
             }
             return 1;
         }
@@ -79,10 +97,25 @@ public class ApplicationTablet {
         }
     }
 
-    public void deconnexionCM()
+    /**
+     * @Function : deconnexionCM
+     * @Descripton : Disconnect the tablet
+     */
+    public void logOutCM()
     {
+        try{
+            this.socketClient.close();
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * @Function : sendOrder
+     * @param order : the JSONObject corresponding to the order to send
+     * @Description :
+     */
     public void sendOrder(JSONObject order)
     {
 
@@ -91,5 +124,20 @@ public class ApplicationTablet {
     public void ask4video(JSONObject order)
     {
 
+    }
+
+    /**
+     * @Function : writeMessageOnFlow
+     * @param message : message to send to the comManager
+     * @Description : Write the message on the network flow in order to send it
+     */
+    public void writeMessageOnFlow(String message)
+    {
+        try {
+            NetworkFlow.writeMessage(out, message);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 }
