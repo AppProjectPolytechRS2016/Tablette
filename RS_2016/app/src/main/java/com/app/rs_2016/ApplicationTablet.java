@@ -51,7 +51,7 @@ public class ApplicationTablet {
      * @return : an interger ; if 1 the connexion has been established
      * @Description : Connect the tablet to the comManager
      */
-    public int logINCM(String IPCMAddress, int iPortNum, String IPTablet)
+    public int logInCM(String IPCMAddress, int iPortNum, String IPTablet)
     {
         try
         {
@@ -116,8 +116,18 @@ public class ApplicationTablet {
      * @param order : the JSONObject corresponding to the order to send
      * @Description :
      */
-    public void sendOrder(JSONObject order)
+    public int sendOrder(JSONObject order)
     {
+        try{
+            this.writeMessageOnFlow(order.toString());
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return -1;
+        }
+
+        return 1;
+
 
     }
 

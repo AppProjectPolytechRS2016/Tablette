@@ -9,7 +9,7 @@
     <dimen name="titleBlock_editText_height_10inches">50dp</dimen>
     <dimen name="ipBlock_height_10inches">100dp</dimen>
     <dimen name="listBlock_height_10inches">450dp</dimen>
-    <dimen name="orderBlock_height_10inches">300dp</dimen>
+    <dimen name="orderBlock_height_10inches">370dp</dimen>
     <dimen name="spaceBlock_height_10inches">20dp</dimen>
 	<dimen name="listView_width_10inches">380dp</dimen>
 	<dimen name="listView_height_10inches">420dp</dimen>

@@ -33,6 +33,8 @@ public class MainActivity extends ActionBarActivity {
     private Button              buttonWalk ;
     private Button              buttonMove ;
     private Button              buttonSend ;
+    private Button              buttonLogInRobot;
+    private Button              buttonLogOutRobot;
 
     private EditText            editTextIPByte1CM ;
     private EditText            editTextIPByte2CM ;
@@ -97,8 +99,9 @@ public class MainActivity extends ActionBarActivity {
         this.buttonMove             = (Button)this.findViewById(R.id.buttonMove) ;
         this.buttonReccord          = (Button)this.findViewById(R.id.buttonReccord) ;
         this.buttonSend             = (Button)this.findViewById(R.id.buttonSend);
-        //this.buttonSend             = (Button)this.findViewById(R.id.buttonSendTestPhone);
         this.buttonWalk             = (Button)this.findViewById(R.id.buttonWalk) ;
+        this.buttonLogInRobot       = (Button)this.findViewById(R.id.buttonLogInRobot);
+        this.buttonLogOutRobot      = (Button)this.findViewById(R.id.buttonLogOutRobot);
 
         //Set links for the edit texts
         this.editTextAngleVal       = (EditText)this.findViewById(R.id.editTextThetaVal) ;
@@ -126,8 +129,9 @@ public class MainActivity extends ActionBarActivity {
         this.robotList              = (ListView)this.findViewById(R.id.listViewRobot) ;
         this.featuresList           = (ListView)this.findViewById(R.id.listViewFeatures) ;
 
-        //Hide de LogOut button
+        //Hide the LogOut buttons
         buttonLogOutCM.setVisibility(View.INVISIBLE);
+        buttonLogOutRobot.setVisibility(View.INVISIBLE);
 
         //Recover the IP address of the tablet
         WifiManager wifiMgr         = (WifiManager)getSystemService(Context.WIFI_SERVICE);
@@ -144,6 +148,8 @@ public class MainActivity extends ActionBarActivity {
                 new OnClickListener() {
                     public void onClick(View v) {
                         try {
+                            int iTest       = 0;
+
                             //Recover each byte value of the IP
                             iByte1IP_Value  = Integer.parseInt(editTextIPByte1CM.getText().toString());
                             iByte2IP_Value  = Integer.parseInt(editTextIPByte2CM.getText().toString());
@@ -157,10 +163,11 @@ public class MainActivity extends ActionBarActivity {
                             strIPCM         = String.format("%d.%d.%d.%d", iByte1IP_Value, iByte2IP_Value, iByte3IP_Value, iByte4IP_Value);
                             debugTextIPCM.setText("IP CM : " + strIPCM + " Check Res = " + bCheckResult);
 
+                            //If the IP address is valid
                             if (bCheckResult == true) {
                                 ExecutorService execServ = Executors.newFixedThreadPool(3);
                                 appTab      = new ApplicationTablet("tablet", iPortCMNum, execServ);
-                                int iTest   = appTab.logINCM(strIPCM, iPortCMNum, tabletAddress);
+                                iTest   = appTab.logInCM(strIPCM, iPortCMNum, tabletAddress);
 
                                 //If the connection succeed
                                 if (iTest == 1) {
@@ -194,47 +201,6 @@ public class MainActivity extends ActionBarActivity {
                     }
                 });
 
-        //Set the CliclListener for the Send button, in order to send orders to the robot
-        buttonSend.setOnClickListener(
-                new OnClickListener() {
-                    public void onClick(View v) {
-
-                        try {
-                            //Re-initialize the bCheckResult variable
-                            bCheckResult            = false;
-
-                            //Recover each byte value of the IP
-                            iByteRobotIP1_Value     = Integer.parseInt(editTextIPByte1Robot.getText().toString());
-                            iByteRobotIP2_Value     = Integer.parseInt(editTextIPByte2Robot.getText().toString());
-                            iByteRobotIP3_Value     = Integer.parseInt(editTextIPByte3Robot.getText().toString());
-                            iByteRobotIP4_Value     = Integer.parseInt(editTextIPByte4Robot.getText().toString());
-
-                            // Check if the IP address is valid
-                            bCheckResult            = CheckUserChoice.checkIP(iByte1IP_Value, iByte2IP_Value, iByte3IP_Value, iByte4IP_Value);
-
-                            //Display for debug
-                            strIPRobot              = iByteRobotIP1_Value + "." + iByteRobotIP2_Value + "." + iByteRobotIP3_Value +"." +iByteRobotIP4_Value;
-                            debugTextIPRobot.setText("IP Robot : " + strIPRobot + " Check Res = " + bCheckResult);
-
-                            String strXVal      = editTextXVal.getText().toString();
-                            String strYVal      = editTextYVal.getText().toString();
-                            String strThetaVal  = editTextAngleVal.getText().toString();
-
-                            iXValue             = CheckUserChoice.checkIntParam(strXVal);
-                            iYValue             = CheckUserChoice.checkIntParam(strYVal);
-                            iThetaValue         = CheckUserChoice.checkIntParam(strThetaVal);
-
-                            debugParamMove.setText("Xval = " + strXVal + "; YVal = " + iYValue + "; Theta = " + iThetaValue);
-
-
-                        }
-                        catch (Exception e){
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
-
         //Set the ClickListener for the
         buttonLogOutCM.setOnClickListener(
                 new OnClickListener() {
@@ -256,7 +222,106 @@ public class MainActivity extends ActionBarActivity {
                     }
                 }
         );
+
+
+        //Set the ClicklListener for the LogIn Robot button, in order to send orders to the robot
+        buttonLogInRobot.setOnClickListener(
+                new OnClickListener() {
+                    public void onClick(View v) {
+
+                        try {
+                            int iTest               = 0;
+
+                            //Re-initialize the bCheckResult variable
+                            bCheckResult            = false;
+
+                            //Recover each byte value of the IP
+                            iByteRobotIP1_Value     = Integer.parseInt(editTextIPByte1Robot.getText().toString());
+                            iByteRobotIP2_Value     = Integer.parseInt(editTextIPByte2Robot.getText().toString());
+                            iByteRobotIP3_Value     = Integer.parseInt(editTextIPByte3Robot.getText().toString());
+                            iByteRobotIP4_Value     = Integer.parseInt(editTextIPByte4Robot.getText().toString());
+
+                            // Check if the IP address is valid
+                            bCheckResult            = CheckUserChoice.checkIP(iByte1IP_Value, iByte2IP_Value, iByte3IP_Value, iByte4IP_Value);
+
+                            //Display for debug
+                            strIPRobot              = iByteRobotIP1_Value + "." + iByteRobotIP2_Value + "." + iByteRobotIP3_Value +"." +iByteRobotIP4_Value;
+                            debugTextIPRobot.setText("IP Robot : " + strIPRobot + " Check Res = " + bCheckResult);
+
+                            //If the IP address is valid
+                            if(bCheckResult == true){
+                                JSONObject jsonOrder    = new JSONObject();
+                                jsonOrder.put("From", strIPCM);
+                                jsonOrder.put("To", strIPRobot);
+                                jsonOrder.put("MsgType", "Order");
+                                jsonOrder.put("OrderName", "ConnectTo");
+
+                                iTest =     appTab.sendOrder(jsonOrder);
+
+                                //If the tablet is connected to the robot
+                                if(iTest == 1){
+                                    Toast.makeText(MainActivity.this, "La tablette est maintenant connectée au robot.", Toast.LENGTH_LONG).show();
+
+                                    //Set the visibily of the log in and log out buttons
+                                    buttonLogInRobot.setVisibility(View.INVISIBLE);
+                                    buttonLogOutRobot.setVisibility(View.VISIBLE);
+
+                                    //Disable the IP editText
+                                    editTextIPByte1Robot.setEnabled(false);
+                                    editTextIPByte2Robot.setEnabled(false);
+                                    editTextIPByte3Robot.setEnabled(false);
+                                    editTextIPByte4Robot.setEnabled(false);
+                                }
+                            }
+                            else {
+                                Toast.makeText(MainActivity.this, "L'adresse IP renseignée est invalide.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                        //If the IP address is not valid
+                        catch(Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(MainActivity.this, "L'adresse IP du robot contient des champs vides.", Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
+
+        //Set the ClickListener for the LogOut button for the robot
+        buttonLogOutRobot.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Show the LogIn button
+                        buttonLogInRobot.setVisibility(View.VISIBLE);
+
+                        //Disable the IP editText
+                        editTextIPByte1Robot.setEnabled(true);
+                        editTextIPByte2Robot.setEnabled(true);
+                        editTextIPByte3Robot.setEnabled(true);
+                        editTextIPByte4Robot.setEnabled(true);
+                    }
+                }
+        );
+
+        //Set the ClickListener for the Send button
+        buttonSend.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                     public void onClick(View v) {
+                        String strXVal      = editTextXVal.getText().toString();
+                        String strYVal      = editTextYVal.getText().toString();
+                        String strThetaVal  = editTextAngleVal.getText().toString();
+
+                        iXValue             = CheckUserChoice.checkIntParam(strXVal);
+                        iYValue             = CheckUserChoice.checkIntParam(strYVal);
+                        iThetaValue         = CheckUserChoice.checkIntParam(strThetaVal);
+
+                        debugParamMove.setText("Xval = " + strXVal + "; YVal = " + iYValue + "; Theta = " + iThetaValue);
+                     }
+                }
+        );
     }
+
 
 
     @Override
