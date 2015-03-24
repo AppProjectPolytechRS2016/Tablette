@@ -1,5 +1,7 @@
 package com.app.rs_2016;
 
+import java.text.BreakIterator;
+
 /**
  * Created by Sarion on 01/03/2015.
  */
@@ -8,7 +10,7 @@ package com.app.rs_2016;
 public class CheckUserChoice {
 
     /**
-     *
+     *@function : check each byte of an IP address
      * @param toTest0 : first IP byte
      * @param toTest1 : second IP byte
      * @param toTest2 : third IP byte
@@ -25,7 +27,7 @@ public class CheckUserChoice {
     }
 
     /**
-     *
+     *@function : check the value of the angle
      * @param iAngleToTest
      * @return
      */
@@ -40,6 +42,11 @@ public class CheckUserChoice {
         return bResult;
     }
 
+    /**
+     * @function : check and convert the string to an integer
+     * @param strParamToTest
+     * @return
+     */
     public static int checkIntParam(String strParamToTest)
     {
         int iResult     = 0;
@@ -55,5 +62,21 @@ public class CheckUserChoice {
         }
 
         return iResult;
+    }
+
+    /**
+     * @function : recover the order name
+     * @param strText
+     * @return
+     */
+    public static String recoverOrderName(String strText){
+        String[] splitArray = null;
+        String orderName    = null;
+
+        //Parse the string; delimiter = " "
+        splitArray = strText.split(" ");
+        orderName = splitArray[0];
+
+        return orderName;
     }
 }

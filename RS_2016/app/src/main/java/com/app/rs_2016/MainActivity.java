@@ -11,6 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.view.View.OnClickListener;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.view.View;
 import android.net.wifi.WifiManager;
@@ -29,12 +32,14 @@ public class MainActivity extends ActionBarActivity {
     //Declaration of the different elements
     private Button              buttonLogInCM ;
     private Button              buttonLogOutCM ;
-    private Button              buttonReccord ;
-    private Button              buttonWalk ;
-    private Button              buttonMove ;
     private Button              buttonSend ;
     private Button              buttonLogInRobot;
     private Button              buttonLogOutRobot;
+
+    private RadioGroup          radioGroupOrder;
+    private RadioButton         radButtonReccord ;
+    private RadioButton         radButtonWalk ;
+    private RadioButton         radButtonMove ;
 
     private EditText            editTextIPByte1CM ;
     private EditText            editTextIPByte2CM ;
@@ -56,6 +61,7 @@ public class MainActivity extends ActionBarActivity {
     private TextView            debugTextIPTablet;
     private TextView            debugParamMove;
 
+    private TableRow            rowMoveParam;
 
     //Intern variables
     private int                 iByte1IP_Value ;
@@ -81,6 +87,8 @@ public class MainActivity extends ActionBarActivity {
 
     private ApplicationTablet   appTab;
 
+    private JSONObject          jsonOrder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,12 +104,14 @@ public class MainActivity extends ActionBarActivity {
         //Set links for the buttons
         this.buttonLogInCM          = (Button)this.findViewById(R.id.buttonLogInCM) ;
         this.buttonLogOutCM         = (Button)this.findViewById(R.id.buttonLogOutCM) ;
-        this.buttonMove             = (Button)this.findViewById(R.id.buttonMove) ;
-        this.buttonReccord          = (Button)this.findViewById(R.id.buttonReccord) ;
         this.buttonSend             = (Button)this.findViewById(R.id.buttonSend);
-        this.buttonWalk             = (Button)this.findViewById(R.id.buttonWalk) ;
         this.buttonLogInRobot       = (Button)this.findViewById(R.id.buttonLogInRobot);
         this.buttonLogOutRobot      = (Button)this.findViewById(R.id.buttonLogOutRobot);
+
+        this.radioGroupOrder        = (RadioGroup)this.findViewById(R.id.orderRadioGroup);
+        this.radButtonMove          = (RadioButton)this.findViewById(R.id.radioButtonMove) ;
+        this.radButtonReccord       = (RadioButton)this.findViewById(R.id.radioButtonReccord) ;
+        this.radButtonWalk          = (RadioButton)this.findViewById(R.id.radioButtonWalk) ;
 
         //Set links for the edit texts
         this.editTextAngleVal       = (EditText)this.findViewById(R.id.editTextThetaVal) ;
@@ -129,6 +139,8 @@ public class MainActivity extends ActionBarActivity {
         this.robotList              = (ListView)this.findViewById(R.id.listViewRobot) ;
         this.featuresList           = (ListView)this.findViewById(R.id.listViewFeatures) ;
 
+        this.rowMoveParam           = (TableRow)this.findViewById(R.id.moveParam);
+
         //Hide the LogOut buttons
         buttonLogOutCM.setVisibility(View.INVISIBLE);
         buttonLogOutRobot.setVisibility(View.INVISIBLE);
@@ -137,6 +149,19 @@ public class MainActivity extends ActionBarActivity {
         WifiManager wifiMgr         = (WifiManager)getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo           = wifiMgr.getConnectionInfo();
         int ip                      = wifiInfo.getIpAddress();
+
+        //Initialize the radio group
+        radioGroupOrder.clearCheck();
+
+        //Disable the fields for the robot
+        editTextIPByte1Robot.setEnabled(false);
+        editTextIPByte2Robot.setEnabled(false);
+        editTextIPByte3Robot.setEnabled(false);
+        editTextIPByte4Robot.setEnabled(false);
+        buttonLogInRobot.setEnabled(false);
+
+        //Hide Move parameters
+        rowMoveParam.setVisibility(View.INVISIBLE);
 
         //Convert to IP format
         tabletAddress               = String.format("%d.%d.%d.%d", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff), (ip >> 24 & 0xff));
@@ -167,7 +192,7 @@ public class MainActivity extends ActionBarActivity {
                             if (bCheckResult == true) {
                                 ExecutorService execServ = Executors.newFixedThreadPool(3);
                                 appTab      = new ApplicationTablet("tablet", iPortCMNum, execServ);
-                                iTest   = appTab.logInCM(strIPCM, iPortCMNum, tabletAddress);
+                                iTest       = appTab.logInCM(strIPCM, iPortCMNum, tabletAddress);
 
                                 //If the connection succeed
                                 if (iTest == 1) {
@@ -182,6 +207,15 @@ public class MainActivity extends ActionBarActivity {
                                     editTextIPByte2CM.setEnabled(false);
                                     editTextIPByte3CM.setEnabled(false);
                                     editTextIPByte4CM.setEnabled(false);
+
+                                    //Enable the fields for the robot
+                                    editTextIPByte1Robot.setEnabled(true);
+                                    editTextIPByte2Robot.setEnabled(true);
+                                    editTextIPByte3Robot.setEnabled(true);
+                                    editTextIPByte4Robot.setEnabled(true);
+                                    buttonLogInRobot.setEnabled(true);
+
+                                    bCheckResult    = false;
                                 }
                                 else {
                                     Toast.makeText(MainActivity.this, "La tablette n'a pas pu se connecter au gestionnaire de communication.", Toast.LENGTH_LONG).show();
@@ -228,35 +262,33 @@ public class MainActivity extends ActionBarActivity {
         buttonLogInRobot.setOnClickListener(
                 new OnClickListener() {
                     public void onClick(View v) {
-
                         try {
-                            int iTest               = 0;
+                            int iTest = 0;
 
                             //Re-initialize the bCheckResult variable
-                            bCheckResult            = false;
+                            bCheckResult = false;
 
                             //Recover each byte value of the IP
-                            iByteRobotIP1_Value     = Integer.parseInt(editTextIPByte1Robot.getText().toString());
-                            iByteRobotIP2_Value     = Integer.parseInt(editTextIPByte2Robot.getText().toString());
-                            iByteRobotIP3_Value     = Integer.parseInt(editTextIPByte3Robot.getText().toString());
-                            iByteRobotIP4_Value     = Integer.parseInt(editTextIPByte4Robot.getText().toString());
+                            iByteRobotIP1_Value = Integer.parseInt(editTextIPByte1Robot.getText().toString());
+                            iByteRobotIP2_Value = Integer.parseInt(editTextIPByte2Robot.getText().toString());
+                            iByteRobotIP3_Value = Integer.parseInt(editTextIPByte3Robot.getText().toString());
+                            iByteRobotIP4_Value = Integer.parseInt(editTextIPByte4Robot.getText().toString());
 
                             // Check if the IP address is valid
-                            bCheckResult            = CheckUserChoice.checkIP(iByte1IP_Value, iByte2IP_Value, iByte3IP_Value, iByte4IP_Value);
+                            bCheckResult = CheckUserChoice.checkIP(iByte1IP_Value, iByte2IP_Value, iByte3IP_Value, iByte4IP_Value);
 
                             //Display for debug
-                            strIPRobot              = iByteRobotIP1_Value + "." + iByteRobotIP2_Value + "." + iByteRobotIP3_Value +"." +iByteRobotIP4_Value;
+                            strIPRobot = iByteRobotIP1_Value + "." + iByteRobotIP2_Value + "." + iByteRobotIP3_Value +"." +iByteRobotIP4_Value;
                             debugTextIPRobot.setText("IP Robot : " + strIPRobot + " Check Res = " + bCheckResult);
 
                             //If the IP address is valid
                             if(bCheckResult == true){
-                                JSONObject jsonOrder    = new JSONObject();
+                                JSONObject jsonOrder = new JSONObject();
                                 jsonOrder.put("From", strIPCM);
                                 jsonOrder.put("To", strIPRobot);
                                 jsonOrder.put("MsgType", "Order");
                                 jsonOrder.put("OrderName", "ConnectTo");
-
-                                iTest =     appTab.sendOrder(jsonOrder);
+                                iTest = appTab.sendOrder(jsonOrder);
 
                                 //If the tablet is connected to the robot
                                 if(iTest == 1){
@@ -277,12 +309,12 @@ public class MainActivity extends ActionBarActivity {
                                 Toast.makeText(MainActivity.this, "L'adresse IP renseignée est invalide.", Toast.LENGTH_LONG).show();
                             }
                         }
+
                         //If the IP address is not valid
                         catch(Exception e) {
                             e.printStackTrace();
                             Toast.makeText(MainActivity.this, "L'adresse IP du robot contient des champs vides.", Toast.LENGTH_LONG).show();
                         }
-
                     }
                 });
 
@@ -308,6 +340,29 @@ public class MainActivity extends ActionBarActivity {
                 new OnClickListener() {
                     @Override
                      public void onClick(View v) {
+
+                     }
+                }
+        );
+
+        /* Attach CheckedChangeListener to radio group */
+     /*   radioGroupOrder.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                RadioButton rbSelected      = (RadioButton) group.findViewById(checkedId);
+                int iTest                   = 0;
+
+                //If a radio button is checked
+                if(null != rbSelected && checkedId > -1){
+                    //Recover the order name
+                    String strChoosenOrder  = CheckUserChoice.recoverOrderName(String.valueOf(rbSelected.getText()));
+
+
+                    if(strChoosenOrder == "Move"){
+                       //Hide Move parameters
+                        rowMoveParam.setVisibility(View.VISIBLE);
+
                         String strXVal      = editTextXVal.getText().toString();
                         String strYVal      = editTextYVal.getText().toString();
                         String strThetaVal  = editTextAngleVal.getText().toString();
@@ -316,10 +371,33 @@ public class MainActivity extends ActionBarActivity {
                         iYValue             = CheckUserChoice.checkIntParam(strYVal);
                         iThetaValue         = CheckUserChoice.checkIntParam(strThetaVal);
 
-                        debugParamMove.setText("Xval = " + strXVal + "; YVal = " + iYValue + "; Theta = " + iThetaValue);
-                     }
+                    }
+
+                    try {
+                        jsonOrder.put("From", tabletAddress);
+                        jsonOrder.put("To", strIPRobot);
+                        jsonOrder.put("MsgType", "Order");
+                        jsonOrder.put("OrderName", strChoosenOrder);
+
+                        if(strChoosenOrder == "Move"){
+                            jsonOrder.put("XVal", iXValue);
+                            jsonOrder.put("YVal", iYValue);
+                            jsonOrder.put("ThetaVal", iThetaValue);
+                        }
+
+                        debugParamMove.setText(jsonOrder.toString());
+                       // iTest =     appTab.sendOrder(jsonOrder);
+                    }
+
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                    debugParamMove.setText(jsonOrder.toString());
                 }
-        );
+
+            }
+        });*/
     }
 
 

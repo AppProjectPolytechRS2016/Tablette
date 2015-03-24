@@ -448,77 +448,36 @@
                 android:layout_height="5dp"
                 android:id="@+id/reccordBlock">
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Reccord"
-                    android:id="@+id/buttonReccord"
-                    android:layout_margin="@dimen/default_margin_10inches"
-                    android:textSize="@dimen/button_textSize_10inches" />
+                <RadioGroup android:layout_column="1"
+                    android:id="@+id/orderRadioGroup">
+                <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Move : Commande le déplacement du robot selon les axes X et Y, en fonction d&apos;un angle de rotation."
+                        android:id="@+id/radioButtonMove"
+                        android:layout_column="1"
+                        android:layout_margin="@dimen/default_margin_10inches"
+                    android:checked="false" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:text="Demande au robot d&apos;afficher son flux vidéo sur le PC qui lui est associé."
-                    android:id="@+id/descriptionReccord"
-                    android:layout_margin="@dimen/default_margin_10inches"
-                    android:textSize="@dimen/description_text_size_10inches"
-                    android:textColor="#ff000000"
-                    android:layout_column="1" />
-            </TableRow>
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Walk : Lance le mode &quot;promenade&quot; ; lorsque le robot rencontre un obstacle il tourne."
+                        android:id="@+id/radioButtonWalk"
+                        android:layout_column="1"
+                        android:layout_margin="@dimen/default_margin_10inches"
+                        android:checked="false" />
 
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/walkBlock">
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Reccord : demande au robot d&apos;afficher son flux vidéo sur le PC qui lui est associé."
+                        android:id="@+id/radioButtonReccord"
+                        android:layout_column="1"
+                        android:layout_margin="@dimen/default_margin_10inches"
+                        android:checked="false" />
 
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Walk"
-                    android:id="@+id/buttonWalk"
-                    android:layout_column="0"
-                    android:layout_margin="@dimen/default_margin_10inches"
-                    android:textSize="@dimen/button_textSize_10inches" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:text="Lance le mode &quot;promenade&quot; ; lorsque le robot rencontre un obstacle il tourne soit  droite, soit à gauche."
-                    android:id="@+id/descriptionWalk"
-                    android:layout_column="1"
-                    android:textSize="@dimen/description_text_size_10inches"
-                    android:textColor="#ff000000"
-                    android:layout_margin="@dimen/default_margin_10inches" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:id="@+id/moveBlock">
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Move"
-                    android:id="@+id/buttonMove"
-                    android:layout_column="0"
-                    android:layout_margin="@dimen/default_margin_10inches"
-                    android:textSize="@dimen/button_textSize_10inches" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Commande le déplacement du robot selon les axes X et Y, et en fonction d&apos;un angle de rotation"
-                    android:id="@+id/descriptionMove"
-                    android:layout_column="1"
-                    android:textSize="@dimen/description_text_size_10inches"
-                    android:textColor="#ff000000"
-                    android:layout_margin="@dimen/default_margin_10inches" />
+                </RadioGroup>
             </TableRow>
 
             <TableRow
@@ -527,10 +486,11 @@
                 android:id="@+id/moveParam">
 
                 <TableLayout
-                    android:layout_width="@dimen/tableOrder_width_10inches"
+                    android:layout_width="match_parent"
                     android:layout_height="@dimen/tableOrder_height_10inches"
                     android:layout_column="1"
-                    android:background="#ffb8ccff">
+                    android:background="#ffb8ccff"
+                    android:layout_margin="@dimen/default_margin_10inches">
 
                     <TableRow
                         android:layout_width="fill_parent"
@@ -628,6 +588,17 @@
                             android:imeOptions="actionDone"
                             android:text="0" />
 
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Envoyer"
+                            android:id="@+id/buttonSend"
+                            android:layout_marginLeft="@dimen/button_default_margin_10inches"
+                            android:layout_marginTop="@dimen/small_margin_10inches"
+                            android:layout_marginRight="@dimen/default_margin_10inches"
+                            android:textSize="@dimen/button_textSize_10inches"
+                            android:layout_column="3" />
+
                     </TableRow>
                 </TableLayout>
             </TableRow>
@@ -649,16 +620,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
 
-                <Button
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:text="Envoyer"
-                    android:id="@+id/buttonSend"
-                    android:layout_marginLeft="@dimen/button_default_margin_10inches"
-                    android:layout_marginTop="@dimen/small_margin_10inches"
-                    android:layout_marginRight="@dimen/default_margin_10inches"
-                    android:textSize="@dimen/button_textSize_10inches"
-                    android:layout_column="1" />
             </TableRow>
 
         </TableLayout>
@@ -704,15 +665,6 @@
                 android:id="@+id/debugMoveParam"
                 android:textSize="20dp" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Envoyer"
-                android:id="@+id/buttonSendTestPhone"
-                android:layout_marginLeft="@dimen/button_default_margin_10inches"
-                android:layout_marginTop="@dimen/small_margin_10inches"
-                android:layout_marginRight="@dimen/default_margin_10inches"
-                android:textSize="@dimen/button_textSize_10inches" />
         </LinearLayout>
 
     </LinearLayout>
