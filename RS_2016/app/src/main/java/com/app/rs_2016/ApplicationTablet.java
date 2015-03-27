@@ -82,7 +82,8 @@ public class ApplicationTablet {
                 }
 
                 //Send the JSONObject in a String format
-                this.writeMessageOnFlow(jsonIdent.toString());
+                this.writeMessageOnFlow(jsonIdent.toString() + "\r\n");
+
 
             }
             catch (IOException e) {
@@ -119,7 +120,7 @@ public class ApplicationTablet {
     public int sendOrder(JSONObject order)
     {
         try{
-            this.writeMessageOnFlow(order.toString());
+            this.writeMessageOnFlow(order.toString() + "\r\n");
         }
         catch(Exception e){
             e.printStackTrace();

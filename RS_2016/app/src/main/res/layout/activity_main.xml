@@ -446,7 +446,7 @@
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="5dp"
-                android:id="@+id/reccordBlock">
+                android:id="@+id/selectOrderBlock">
 
                 <RadioGroup android:layout_column="1"
                     android:id="@+id/orderRadioGroup">
@@ -588,17 +588,6 @@
                             android:imeOptions="actionDone"
                             android:text="0" />
 
-                        <Button
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Envoyer"
-                            android:id="@+id/buttonSend"
-                            android:layout_marginLeft="@dimen/button_default_margin_10inches"
-                            android:layout_marginTop="@dimen/small_margin_10inches"
-                            android:layout_marginRight="@dimen/default_margin_10inches"
-                            android:textSize="@dimen/button_textSize_10inches"
-                            android:layout_column="3" />
-
                     </TableRow>
                 </TableLayout>
             </TableRow>
@@ -614,12 +603,16 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent">
 
-            </TableRow>
-
-            <TableRow
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent">
-
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Envoyer"
+                    android:id="@+id/buttonSend"
+                    android:layout_marginLeft="@dimen/button_default_margin_10inches"
+                    android:layout_marginTop="@dimen/small_margin_10inches"
+                    android:layout_marginRight="@dimen/default_margin_10inches"
+                    android:textSize="@dimen/button_textSize_10inches"
+                    android:layout_column="1" />
             </TableRow>
 
         </TableLayout>

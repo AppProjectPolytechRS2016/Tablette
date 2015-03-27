@@ -25,7 +25,7 @@ public class NetworkFlow
     public static void writeMessage(DataOutputStream out, String s) throws IOException
     {
         byte message[]  = s.getBytes();
-        out.writeInt(message.length);
+        //out.writeInt(message.length);
         out.write(message);
     }
 }

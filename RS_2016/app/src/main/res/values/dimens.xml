@@ -10,7 +10,7 @@
     <dimen name="ipBlock_height_10inches">100dp</dimen>
     <dimen name="listBlock_height_10inches">450dp</dimen>
     <dimen name="orderBlock_height_10inches">370dp</dimen>
-    <dimen name="spaceBlock_height_10inches">20dp</dimen>
+    <dimen name="spaceBlock_height_10inches">10dp</dimen>
 	<dimen name="listView_width_10inches">380dp</dimen>
 	<dimen name="listView_height_10inches">420dp</dimen>
 	<dimen name="tableOrder_width_10inches">400dp</dimen>
@@ -44,7 +44,6 @@
 	<dimen name="button_default_margin_10inches">10dp</dimen>
 	<dimen name="textView_default_leftMargin_10inches">10dp</dimen>
 	<dimen name="small_margin_10inches">2dp</dimen>
-
 
 
 </resources>

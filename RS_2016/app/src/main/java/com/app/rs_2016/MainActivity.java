@@ -61,8 +61,6 @@ public class MainActivity extends ActionBarActivity {
     private TextView            debugTextIPTablet;
     private TextView            debugParamMove;
 
-    private TableRow            rowMoveParam;
-
     //Intern variables
     private int                 iByte1IP_Value ;
     private int                 iByte2IP_Value ;
@@ -77,6 +75,7 @@ public class MainActivity extends ActionBarActivity {
     private String              strIPRobot      = null;
     private String              strIPCM         = null;
     private String              tabletAddress;
+    private String              strChoosenOrder;
 
     private int                 iPortCMNum      = 6020;
     private int                 iXValue;
@@ -88,6 +87,8 @@ public class MainActivity extends ActionBarActivity {
     private ApplicationTablet   appTab;
 
     private JSONObject          jsonOrder;
+
+    private TableRow            rowMoveParam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +109,7 @@ public class MainActivity extends ActionBarActivity {
         this.buttonLogInRobot       = (Button)this.findViewById(R.id.buttonLogInRobot);
         this.buttonLogOutRobot      = (Button)this.findViewById(R.id.buttonLogOutRobot);
 
+        //Set links for the radio buttons
         this.radioGroupOrder        = (RadioGroup)this.findViewById(R.id.orderRadioGroup);
         this.radButtonMove          = (RadioButton)this.findViewById(R.id.radioButtonMove) ;
         this.radButtonReccord       = (RadioButton)this.findViewById(R.id.radioButtonReccord) ;
@@ -134,12 +136,13 @@ public class MainActivity extends ActionBarActivity {
         this.debugTextIPTablet      = (TextView)this.findViewById(R.id.debugIPTablet);
         this.debugParamMove         = (TextView)this.findViewById(R.id.debugMoveParam);
 
-
         //Set links for the lists
         this.robotList              = (ListView)this.findViewById(R.id.listViewRobot) ;
         this.featuresList           = (ListView)this.findViewById(R.id.listViewFeatures) ;
 
-        this.rowMoveParam           = (TableRow)this.findViewById(R.id.moveParam);
+        rowMoveParam                = (TableRow)this.findViewById(R.id.moveParam);
+
+        rowMoveParam.setVisibility(View.INVISIBLE);
 
         //Hide the LogOut buttons
         buttonLogOutCM.setVisibility(View.INVISIBLE);
@@ -160,13 +163,10 @@ public class MainActivity extends ActionBarActivity {
         editTextIPByte4Robot.setEnabled(false);
         buttonLogInRobot.setEnabled(false);
 
-        //Hide Move parameters
-        rowMoveParam.setVisibility(View.INVISIBLE);
-
         //Convert to IP format
         tabletAddress               = String.format("%d.%d.%d.%d", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff), (ip >> 24 & 0xff));
 
-       debugTextIPTablet.setText("IP Tablet : " + tabletAddress);
+        debugTextIPTablet.setText("IP Tablet : " + tabletAddress);
 
         //Set the click listeners for the LogIn button
         buttonLogInCM.setOnClickListener(
@@ -247,16 +247,27 @@ public class MainActivity extends ActionBarActivity {
                         buttonLogInCM.setVisibility(View.VISIBLE);
                         Toast.makeText(MainActivity.this, "La tablette s'est déconnectée du serveur.", Toast.LENGTH_LONG).show();
 
-                        //Enable the IP EditTexts
+                        //Enable the IPCM EditTexts
                         editTextIPByte1CM.setEnabled(true);
                         editTextIPByte2CM.setEnabled(true);
                         editTextIPByte3CM.setEnabled(true);
                         editTextIPByte4CM.setEnabled(true);
 
+                        //Disable the IP Robot EditTexts
+                        editTextIPByte1Robot.setEnabled(false);
+                        editTextIPByte2Robot.setEnabled(false);
+                        editTextIPByte3Robot.setEnabled(false);
+                        editTextIPByte4Robot.setEnabled(false);
+
+                        //Clear the radio buttons
+                        radioGroupOrder.clearCheck();
+
+                        //Hide the move parameters
+                        rowMoveParam.setVisibility(View.INVISIBLE);
+
                     }
                 }
         );
-
 
         //Set the ClicklListener for the LogIn Robot button, in order to send orders to the robot
         buttonLogInRobot.setOnClickListener(
@@ -284,7 +295,7 @@ public class MainActivity extends ActionBarActivity {
                             //If the IP address is valid
                             if(bCheckResult == true){
                                 JSONObject jsonOrder = new JSONObject();
-                                jsonOrder.put("From", strIPCM);
+                                jsonOrder.put("From", tabletAddress);
                                 jsonOrder.put("To", strIPRobot);
                                 jsonOrder.put("MsgType", "Order");
                                 jsonOrder.put("OrderName", "ConnectTo");
@@ -331,6 +342,8 @@ public class MainActivity extends ActionBarActivity {
                         editTextIPByte2Robot.setEnabled(true);
                         editTextIPByte3Robot.setEnabled(true);
                         editTextIPByte4Robot.setEnabled(true);
+
+                        //Send a message to the robot
                     }
                 }
         );
@@ -341,12 +354,57 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                      public void onClick(View v) {
 
+                        int iTest     = 0;
+
+
+                        JSONObject jsonOrder = new JSONObject();
+
+                        //Add the common fields for the JSONobject
+                        try {
+                            jsonOrder.put("From", tabletAddress);
+                            jsonOrder.put("To", strIPRobot);
+                            jsonOrder.put("MsgType", "Order");
+                            jsonOrder.put("OrderName", strChoosenOrder);
+                        }
+                        catch (JSONException e){
+                            e.printStackTrace();
+                        }
+
+                        if(strChoosenOrder.equals("Move")){
+
+                            Toast.makeText(MainActivity.this, "Move selected", Toast.LENGTH_LONG).show();
+                            //Recover all move parameters
+                            String strXVal      = editTextXVal.getText().toString();
+                            String strYVal      = editTextYVal.getText().toString();
+                            String strThetaVal  = editTextAngleVal.getText().toString();
+
+                            iXValue             = CheckUserChoice.checkIntParam(strXVal);
+                            iYValue             = CheckUserChoice.checkIntParam(strYVal);
+                            iThetaValue         = CheckUserChoice.checkIntParam(strThetaVal);
+
+                            try {
+                                jsonOrder.put("From", tabletAddress);
+                                jsonOrder.put("To", strIPRobot);
+                                jsonOrder.put("MsgType", "Order");
+                                jsonOrder.put("OrderName", strChoosenOrder);
+                                jsonOrder.put("XValue", iXValue);
+                                jsonOrder.put("YValue", iYValue);
+                                jsonOrder.put("ThetaValue", iThetaValue);
+                            }
+                            catch (JSONException e){
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        iTest = appTab.sendOrder(jsonOrder);
+
                      }
                 }
         );
 
         /* Attach CheckedChangeListener to radio group */
-     /*   radioGroupOrder.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        radioGroupOrder.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
@@ -356,48 +414,19 @@ public class MainActivity extends ActionBarActivity {
                 //If a radio button is checked
                 if(null != rbSelected && checkedId > -1){
                     //Recover the order name
-                    String strChoosenOrder  = CheckUserChoice.recoverOrderName(String.valueOf(rbSelected.getText()));
+                    strChoosenOrder  = CheckUserChoice.recoverOrderName(String.valueOf(rbSelected.getText()));
 
-
-                    if(strChoosenOrder == "Move"){
-                       //Hide Move parameters
+                    if(strChoosenOrder.equals("Move")){
                         rowMoveParam.setVisibility(View.VISIBLE);
-
-                        String strXVal      = editTextXVal.getText().toString();
-                        String strYVal      = editTextYVal.getText().toString();
-                        String strThetaVal  = editTextAngleVal.getText().toString();
-
-                        iXValue             = CheckUserChoice.checkIntParam(strXVal);
-                        iYValue             = CheckUserChoice.checkIntParam(strYVal);
-                        iThetaValue         = CheckUserChoice.checkIntParam(strThetaVal);
-
                     }
 
-                    try {
-                        jsonOrder.put("From", tabletAddress);
-                        jsonOrder.put("To", strIPRobot);
-                        jsonOrder.put("MsgType", "Order");
-                        jsonOrder.put("OrderName", strChoosenOrder);
-
-                        if(strChoosenOrder == "Move"){
-                            jsonOrder.put("XVal", iXValue);
-                            jsonOrder.put("YVal", iYValue);
-                            jsonOrder.put("ThetaVal", iThetaValue);
-                        }
-
-                        debugParamMove.setText(jsonOrder.toString());
-                       // iTest =     appTab.sendOrder(jsonOrder);
+                    else{
+                        rowMoveParam.setVisibility(View.INVISIBLE);
                     }
-
-                    catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    debugParamMove.setText(jsonOrder.toString());
                 }
 
             }
-        });*/
+        });
     }
 
 
