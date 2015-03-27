@@ -144,9 +144,8 @@ public class MainActivity extends ActionBarActivity {
 
         rowMoveParam.setVisibility(View.INVISIBLE);
 
-        //Hide the LogOut buttons
+        //Hide the LogOut button
         buttonLogOutCM.setVisibility(View.INVISIBLE);
-        buttonLogOutRobot.setVisibility(View.INVISIBLE);
 
         //Recover the IP address of the tablet
         WifiManager wifiMgr         = (WifiManager)getSystemService(Context.WIFI_SERVICE);
@@ -161,7 +160,11 @@ public class MainActivity extends ActionBarActivity {
         editTextIPByte2Robot.setEnabled(false);
         editTextIPByte3Robot.setEnabled(false);
         editTextIPByte4Robot.setEnabled(false);
-        buttonLogInRobot.setEnabled(false);
+
+        //Hide the buttons for the robot
+        buttonLogInRobot.setVisibility(View.INVISIBLE);
+        buttonSend.setVisibility(View.INVISIBLE);
+        buttonLogOutRobot.setVisibility(View.INVISIBLE);
 
         //Convert to IP format
         tabletAddress               = String.format("%d.%d.%d.%d", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff), (ip >> 24 & 0xff));
@@ -201,6 +204,8 @@ public class MainActivity extends ActionBarActivity {
                                     //Hide the LogIn button and display the LogOut button
                                     buttonLogInCM.setVisibility(View.INVISIBLE);
                                     buttonLogOutCM.setVisibility(View.VISIBLE);
+                                    buttonLogInRobot.setVisibility(View.VISIBLE);
+                                    buttonSend.setVisibility(View.VISIBLE);
 
                                     //Disable the IP EditTexts
                                     editTextIPByte1CM.setEnabled(false);
@@ -262,8 +267,9 @@ public class MainActivity extends ActionBarActivity {
                         //Clear the radio buttons
                         radioGroupOrder.clearCheck();
 
-                        //Hide the move parameters
+                        //Hide the robot's parameters
                         rowMoveParam.setVisibility(View.INVISIBLE);
+                        buttonSend.setVisibility(View.INVISIBLE);
 
                     }
                 }
@@ -343,7 +349,27 @@ public class MainActivity extends ActionBarActivity {
                         editTextIPByte3Robot.setEnabled(true);
                         editTextIPByte4Robot.setEnabled(true);
 
+                        //Clear the radio buttons
+                        radioGroupOrder.clearCheck();
+
+                        //Hide the move parameters
+                        rowMoveParam.setVisibility(View.INVISIBLE);
+                        buttonSend.setVisibility(View.INVISIBLE);
+
                         //Send a message to the robot
+                        JSONObject jsonOrder    = new JSONObject();
+
+                        try{
+                            jsonOrder.put("From", tabletAddress);
+                            jsonOrder.put("To", strIPRobot);
+                            jsonOrder.put("OrderName", "Disconnect");
+
+                            int iTest           = appTab.sendOrder(jsonOrder);
+                        }
+
+                        catch (JSONException e){
+                            e.printStackTrace();
+                        }
                     }
                 }
         );
