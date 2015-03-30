@@ -6,14 +6,19 @@
     </style>
 
     <!-- Define the colors for the app -->
-    <color name="color_genral_background">#262626</color>
+    <color name="color_genral_background">#ff1A0606</color>
 
-    <color name="color_block_background">#ff3e3e3e</color>
-    <color name="color_title_font">#ff0445FF</color>
-    <color name="color_body_font">#ffA5BCFF</color>
-    <color name="color_subtitle_font">#ff5E7CD4</color>
-    <color name="color_list_background">#ff849ECC</color>
+    <color name="color_block_background">#ff300b0b</color>
+    <color name="color_title_font">#ffBA1100</color>
+    <color name="color_body_font">#ff6E4B47</color>
+    <color name="color_subtitle_font">#ff86372E</color>
+    <color name="color_list_background">#ffBA7F78</color>
+
     <color name="color_ipDot_font">#ffffffff</color>
-    <color name="color_debug_background">#ff191D26</color>
+    <color name="color_debug_background">#78ffffff</color>
+    <color name="color_debug_font">#ff3a3a3a</color>
+    <color name="color_default_font">#ff000000</color>
+
+    <color name="color_button_font">#ffffffff</color>
 
 </resources>

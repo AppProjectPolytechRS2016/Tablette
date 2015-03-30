@@ -26,7 +26,7 @@
 	<dimen name="editText_textSize_10inches">20dp</dimen>
 	
 	<!-- EditText's dimensions for parameters -->
-	<dimen name="editText_parameter_width_10inches">205dp</dimen>
+	<dimen name="editText_parameter_width_10inches">230dp</dimen>
 	<dimen name="editText_parameter_height_10inches">35dp</dimen>
 
     <!-- Dimensions for IP address -->

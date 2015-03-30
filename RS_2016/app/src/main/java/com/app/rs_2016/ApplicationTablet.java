@@ -84,7 +84,6 @@ public class ApplicationTablet {
                 //Send the JSONObject in a String format
                 this.writeMessageOnFlow(jsonIdent.toString() + "\r\n");
 
-
             }
             catch (IOException e) {
                 // TODO Auto-generated catch block

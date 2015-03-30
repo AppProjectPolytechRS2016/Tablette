@@ -7,12 +7,14 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem ;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.view.View;
@@ -35,6 +37,7 @@ public class MainActivity extends ActionBarActivity {
     private Button              buttonSend ;
     private Button              buttonLogInRobot;
     private Button              buttonLogOutRobot;
+    private Button              buttonLogOutRobotCM;
 
     private RadioGroup          radioGroupOrder;
     private RadioButton         radButtonReccord ;
@@ -88,7 +91,7 @@ public class MainActivity extends ActionBarActivity {
 
     private JSONObject          jsonOrder;
 
-    private TableRow            rowMoveParam;
+    private TableLayout            rowMoveParam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +111,7 @@ public class MainActivity extends ActionBarActivity {
         this.buttonSend             = (Button)this.findViewById(R.id.buttonSend);
         this.buttonLogInRobot       = (Button)this.findViewById(R.id.buttonLogInRobot);
         this.buttonLogOutRobot      = (Button)this.findViewById(R.id.buttonLogOutRobot);
+        this.buttonLogOutRobotCM    = (Button)this.findViewById(R.id.buttonLogOutRobotCM);
 
         //Set links for the radio buttons
         this.radioGroupOrder        = (RadioGroup)this.findViewById(R.id.orderRadioGroup);
@@ -140,7 +144,7 @@ public class MainActivity extends ActionBarActivity {
         this.robotList              = (ListView)this.findViewById(R.id.listViewRobot) ;
         this.featuresList           = (ListView)this.findViewById(R.id.listViewFeatures) ;
 
-        rowMoveParam                = (TableRow)this.findViewById(R.id.moveParam);
+        rowMoveParam                = (TableLayout)this.findViewById(R.id.moveParam);
 
         rowMoveParam.setVisibility(View.INVISIBLE);
 
@@ -362,6 +366,7 @@ public class MainActivity extends ActionBarActivity {
                         try{
                             jsonOrder.put("From", tabletAddress);
                             jsonOrder.put("To", strIPRobot);
+                            jsonOrder.put("MsgType", "Order");
                             jsonOrder.put("OrderName", "Disconnect");
 
                             int iTest           = appTab.sendOrder(jsonOrder);
@@ -429,6 +434,26 @@ public class MainActivity extends ActionBarActivity {
                 }
         );
 
+        buttonLogOutRobotCM.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        JSONObject jsonOrder    = new JSONObject();
+                        int iTest               = 0;
+
+                        try{
+                            jsonOrder.put("From", tabletAddress);
+                            jsonOrder.put("To", strIPRobot);
+                            jsonOrder.put("MsgType", "End");
+                        }
+
+                        catch(JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                }
+        );
+
         /* Attach CheckedChangeListener to radio group */
         radioGroupOrder.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -453,6 +478,7 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
+
     }
 
 
