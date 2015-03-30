@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem ;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -26,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -64,6 +66,8 @@ public class MainActivity extends ActionBarActivity {
     private TextView            debugTextIPTablet;
     private TextView            debugParamMove;
 
+    private TableLayout            rowMoveParam;
+
     //Intern variables
     private int                 iByte1IP_Value ;
     private int                 iByte2IP_Value ;
@@ -91,7 +95,11 @@ public class MainActivity extends ActionBarActivity {
 
     private JSONObject          jsonOrder;
 
-    private TableLayout            rowMoveParam;
+    private String[]            stFeaturesList;
+    private String[]            stRobotList;
+
+    ArrayAdapter<String>        adapterFeatures;
+    ArrayAdapter<String>        adapterRobots;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,6 +177,7 @@ public class MainActivity extends ActionBarActivity {
         buttonLogInRobot.setVisibility(View.INVISIBLE);
         buttonSend.setVisibility(View.INVISIBLE);
         buttonLogOutRobot.setVisibility(View.INVISIBLE);
+        buttonLogOutRobotCM.setVisibility(View.INVISIBLE);
 
         //Convert to IP format
         tabletAddress               = String.format("%d.%d.%d.%d", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff), (ip >> 24 & 0xff));
@@ -225,6 +234,7 @@ public class MainActivity extends ActionBarActivity {
                                     buttonLogInRobot.setEnabled(true);
 
                                     bCheckResult    = false;
+
                                 }
                                 else {
                                     Toast.makeText(MainActivity.this, "La tablette n'a pas pu se connecter au gestionnaire de communication.", Toast.LENGTH_LONG).show();
@@ -285,6 +295,7 @@ public class MainActivity extends ActionBarActivity {
                     public void onClick(View v) {
                         try {
                             int iTest = 0;
+                            JSONObject jsonRecieved     = new JSONObject();
 
                             //Re-initialize the bCheckResult variable
                             bCheckResult = false;
@@ -309,23 +320,38 @@ public class MainActivity extends ActionBarActivity {
                                 jsonOrder.put("To", strIPRobot);
                                 jsonOrder.put("MsgType", "Order");
                                 jsonOrder.put("OrderName", "ConnectTo");
-                                iTest = appTab.sendOrder(jsonOrder);
+                                jsonRecieved = appTab.sendOrder(jsonOrder);
 
                                 //If the tablet is connected to the robot
-                                if(iTest == 1){
-                                    Toast.makeText(MainActivity.this, "La tablette est maintenant connectée au robot.", Toast.LENGTH_LONG).show();
+                               /* if(jsonRecieved.get("MsgType").equals("Ack") == true){
+                                    if(jsonRecieved.get("Revieved").equals("True") == true){
+                                        Toast.makeText(MainActivity.this, "La tablette est maintenant connectée au robot.", Toast.LENGTH_LONG).show();
 
-                                    //Set the visibily of the log in and log out buttons
-                                    buttonLogInRobot.setVisibility(View.INVISIBLE);
-                                    buttonLogOutRobot.setVisibility(View.VISIBLE);
+                                        //Set the visibily of the log in and log out buttons
+                                        buttonLogInRobot.setVisibility(View.INVISIBLE);
+                                        buttonLogOutRobot.setVisibility(View.VISIBLE);
+                                        buttonLogOutRobotCM.setVisibility(View.VISIBLE);
 
-                                    //Disable the IP editText
-                                    editTextIPByte1Robot.setEnabled(false);
-                                    editTextIPByte2Robot.setEnabled(false);
-                                    editTextIPByte3Robot.setEnabled(false);
-                                    editTextIPByte4Robot.setEnabled(false);
+                                        //Disable the IP editText
+                                        editTextIPByte1Robot.setEnabled(false);
+                                        editTextIPByte2Robot.setEnabled(false);
+                                        editTextIPByte3Robot.setEnabled(false);
+                                        editTextIPByte4Robot.setEnabled(false);*/
+
+                                        try {
+                                            String test = jsonRecieved.toString();
+
+                                            debugParamMove.setText(test);
+                                        }
+                                        catch (Exception e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+                              /*  else{
+                                        Toast.makeText(MainActivity.this, "La tablette n'a pas puse connecter au robot.", Toast.LENGTH_LONG).show();
+                                    }
                                 }
-                            }
+                            }*/
                             else {
                                 Toast.makeText(MainActivity.this, "L'adresse IP renseignée est invalide.", Toast.LENGTH_LONG).show();
                             }
@@ -334,7 +360,7 @@ public class MainActivity extends ActionBarActivity {
                         //If the IP address is not valid
                         catch(Exception e) {
                             e.printStackTrace();
-                            Toast.makeText(MainActivity.this, "L'adresse IP du robot contient des champs vides.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, "Connexion impossible. Merci de vérifier l'adresse IP du robot.", Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -346,6 +372,7 @@ public class MainActivity extends ActionBarActivity {
                     public void onClick(View v) {
                         //Show the LogIn button
                         buttonLogInRobot.setVisibility(View.VISIBLE);
+                        buttonLogOutRobotCM.setVisibility(View.INVISIBLE);
 
                         //Disable the IP editText
                         editTextIPByte1Robot.setEnabled(true);
@@ -369,7 +396,7 @@ public class MainActivity extends ActionBarActivity {
                             jsonOrder.put("MsgType", "Order");
                             jsonOrder.put("OrderName", "Disconnect");
 
-                            int iTest           = appTab.sendOrder(jsonOrder);
+                           // int iTest           = appTab.sendOrder(jsonOrder);
                         }
 
                         catch (JSONException e){
@@ -428,12 +455,13 @@ public class MainActivity extends ActionBarActivity {
 
                         }
 
-                        iTest = appTab.sendOrder(jsonOrder);
+                       // iTest = appTab.sendOrder(jsonOrder);
 
                      }
                 }
         );
 
+        //Set the ClickListener for the button that disconnect the robot from the conManager
         buttonLogOutRobotCM.setOnClickListener(
                 new OnClickListener() {
                     @Override
@@ -467,6 +495,7 @@ public class MainActivity extends ActionBarActivity {
                     //Recover the order name
                     strChoosenOrder  = CheckUserChoice.recoverOrderName(String.valueOf(rbSelected.getText()));
 
+                    //If the selected order is "Move"
                     if(strChoosenOrder.equals("Move")){
                         rowMoveParam.setVisibility(View.VISIBLE);
                     }

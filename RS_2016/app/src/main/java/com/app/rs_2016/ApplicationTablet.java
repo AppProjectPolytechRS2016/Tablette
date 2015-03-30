@@ -1,16 +1,19 @@
 package com.app.rs_2016;
 
 //Import libraries
+import android.util.Log;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
-import java.net.InetSocketAddress;
-import java.util.concurrent.Executors;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.simple.JSONValue;
+
 
 /**
  * Created by Marion on 14/03/2015.
@@ -116,23 +119,33 @@ public class ApplicationTablet {
      * @param order : the JSONObject corresponding to the order to send
      * @Description :
      */
-    public int sendOrder(JSONObject order)
+    public JSONObject sendOrder(JSONObject order)
     {
+        String strRecieved          = null;
+        JSONObject jsonRecieved     = new JSONObject();
+
         try{
-            this.writeMessageOnFlow(order.toString() + "\r\n");
-        }
+            this.writeMessageOnFlow(order.toString()  + "\r\n");
+
+            do {
+                try {
+                    strRecieved     = NetworkFlow.readMessage(in);
+                    Log.d("Debug", strRecieved.toString() + strRecieved.length());
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }while (strRecieved.length() == 0);
+
+            Object obj      = JSONValue.parse(strRecieved);
+            jsonRecieved    = (JSONObject) obj;
+
+         }
         catch(Exception e){
             e.printStackTrace();
-            return -1;
         }
-
-        return 1;
-
-
-    }
-
-    public void ask4video(JSONObject order)
-    {
+        return jsonRecieved;
 
     }
 

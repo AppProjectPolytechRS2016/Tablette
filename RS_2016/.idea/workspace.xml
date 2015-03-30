@@ -73,40 +73,53 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MainActivity.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="MainActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/MainActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="7411" max-vertical-offset="8721">
-              <caret line="479" column="11" selection-start-line="479" selection-start-column="11" selection-end-line="479" selection-end-column="11" />
+            <state vertical-scroll-proportion="0.7637795" vertical-offset="5283" max-vertical-offset="9214">
+              <caret line="345" column="56" selection-start-line="345" selection-start-column="56" selection-end-line="345" selection-end-column="56" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#7753#11753#0" expanded="true" />
-                <element signature="e#11734#11735#0" expanded="true" />
-                <element signature="e#11856#13287#0" expanded="true" />
-                <element signature="e#13268#13269#0" expanded="true" />
-                <element signature="e#13459#16811#0" expanded="true" />
-                <element signature="e#16792#16793#0" expanded="true" />
-                <element signature="e#16945#18444#0" expanded="true" />
-                <element signature="e#18425#18426#0" expanded="true" />
-                <element signature="e#18564#20867#0" expanded="true" />
-                <element signature="e#20848#20849#0" expanded="true" />
-                <element signature="e#20944#21576#0" expanded="true" />
-                <element signature="e#21557#21558#0" expanded="true" />
-                <element signature="e#21698#22546#0" expanded="true" />
-                <element signature="e#22535#22536#0" expanded="true" />
+                <element signature="e#8067#12068#0" expanded="true" />
+                <element signature="e#12049#12050#0" expanded="true" />
+                <element signature="e#12171#13602#0" expanded="true" />
+                <element signature="e#13583#13584#0" expanded="true" />
+                <element signature="e#13774#18166#0" expanded="true" />
+                <element signature="e#18147#18148#0" expanded="true" />
+                <element signature="e#18300#19876#0" expanded="true" />
+                <element signature="e#19857#19858#0" expanded="true" />
+                <element signature="e#19996#22301#0" expanded="true" />
+                <element signature="e#22282#22283#0" expanded="true" />
+                <element signature="e#22471#23103#0" expanded="true" />
+                <element signature="e#23084#23085#0" expanded="true" />
+                <element signature="e#23225#24127#0" expanded="true" />
+                <element signature="e#24116#24117#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ApplicationTablet.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ApplicationTablet.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/ApplicationTablet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8978186" vertical-offset="459" max-vertical-offset="2397">
-              <caret line="84" column="71" selection-start-line="84" selection-start-column="71" selection-end-line="84" selection-end-column="71" />
+            <state vertical-scroll-proportion="-1.3214285" vertical-offset="2037" max-vertical-offset="2771">
+              <caret line="131" column="64" selection-start-line="131" selection-start-column="64" selection-end-line="131" selection-end-column="64" />
               <folding>
+                <element signature="imports" expanded="true" />
                 <element signature="docComment;class#ApplicationTablet#0" expanded="false" />
                 <element signature="method#logOutCM#0;class#ApplicationTablet#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="NetworkFlow.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/NetworkFlow.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="680">
+              <caret line="0" column="24" selection-start-line="0" selection-start-column="24" selection-end-line="0" selection-end-column="24" />
+              <folding>
+                <element signature="imports" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -889,14 +902,14 @@
         <option value="$PROJECT_DIR$/app/build.gradle" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/Client.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/CheckUserChoice.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/NetworkFlow.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/colours.xml" />
         <option value="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/styles.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_main.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/MainActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/NetworkFlow.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/ApplicationTablet.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/MainActivity.java" />
       </list>
     </option>
   </component>
@@ -1297,7 +1310,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32925472" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -1312,7 +1325,7 @@
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32925472" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32925472" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33926585" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12124583" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32369298" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15778251" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1377,7 +1390,7 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="3" />
+      <option name="time" value="5" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -1722,13 +1735,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/NetworkFlow.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="646">
-          <caret line="24" column="35" selection-start-line="24" selection-start-column="23" selection-end-line="24" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/CheckUserChoice.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.39929327" vertical-offset="828" max-vertical-offset="1496">
@@ -1753,14 +1759,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="165" max-vertical-offset="731">
-          <caret line="25" column="48" selection-start-line="25" selection-start-column="48" selection-end-line="25" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/values/dimens.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="34" max-vertical-offset="935">
@@ -1780,37 +1778,56 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/MainActivity.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/AndroidManifest.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="7411" max-vertical-offset="8721">
-          <caret line="479" column="11" selection-start-line="479" selection-start-column="11" selection-end-line="479" selection-end-column="11" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="165" max-vertical-offset="731">
+          <caret line="25" column="48" selection-start-line="25" selection-start-column="48" selection-end-line="25" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/NetworkFlow.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="680">
+          <caret line="0" column="24" selection-start-line="0" selection-start-column="24" selection-end-line="0" selection-end-column="24" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#7753#11753#0" expanded="true" />
-            <element signature="e#11734#11735#0" expanded="true" />
-            <element signature="e#11856#13287#0" expanded="true" />
-            <element signature="e#13268#13269#0" expanded="true" />
-            <element signature="e#13459#16811#0" expanded="true" />
-            <element signature="e#16792#16793#0" expanded="true" />
-            <element signature="e#16945#18444#0" expanded="true" />
-            <element signature="e#18425#18426#0" expanded="true" />
-            <element signature="e#18564#20867#0" expanded="true" />
-            <element signature="e#20848#20849#0" expanded="true" />
-            <element signature="e#20944#21576#0" expanded="true" />
-            <element signature="e#21557#21558#0" expanded="true" />
-            <element signature="e#21698#22546#0" expanded="true" />
-            <element signature="e#22535#22536#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/ApplicationTablet.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8978186" vertical-offset="459" max-vertical-offset="2397">
-          <caret line="84" column="71" selection-start-line="84" selection-start-column="71" selection-end-line="84" selection-end-column="71" />
+        <state vertical-scroll-proportion="-1.3214285" vertical-offset="2037" max-vertical-offset="2771">
+          <caret line="131" column="64" selection-start-line="131" selection-start-column="64" selection-end-line="131" selection-end-column="64" />
           <folding>
+            <element signature="imports" expanded="true" />
             <element signature="docComment;class#ApplicationTablet#0" expanded="false" />
             <element signature="method#logOutCM#0;class#ApplicationTablet#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/app/rs_2016/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7637795" vertical-offset="5283" max-vertical-offset="9214">
+          <caret line="345" column="56" selection-start-line="345" selection-start-column="56" selection-end-line="345" selection-end-column="56" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#8067#12068#0" expanded="true" />
+            <element signature="e#12049#12050#0" expanded="true" />
+            <element signature="e#12171#13602#0" expanded="true" />
+            <element signature="e#13583#13584#0" expanded="true" />
+            <element signature="e#13774#18166#0" expanded="true" />
+            <element signature="e#18147#18148#0" expanded="true" />
+            <element signature="e#18300#19876#0" expanded="true" />
+            <element signature="e#19857#19858#0" expanded="true" />
+            <element signature="e#19996#22301#0" expanded="true" />
+            <element signature="e#22282#22283#0" expanded="true" />
+            <element signature="e#22471#23103#0" expanded="true" />
+            <element signature="e#23084#23085#0" expanded="true" />
+            <element signature="e#23225#24127#0" expanded="true" />
+            <element signature="e#24116#24117#0" expanded="true" />
           </folding>
         </state>
       </provider>

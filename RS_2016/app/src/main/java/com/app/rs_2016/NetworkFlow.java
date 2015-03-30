@@ -1,5 +1,7 @@
 package com.app.rs_2016;
 
+import android.util.Log;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
@@ -15,10 +17,10 @@ public class NetworkFlow
     /**Methode permettant de lire le flux reseau d'entree et de convertir ce qui a ete lue en String*/
     public static String readMessage(DataInputStream in) throws IOException,EOFException
     {
-        int taille      = in.readInt();
-        byte message[]  = new byte[taille];
-        int nb          = in.read(message,0,taille);
-        return new String(message);
+        int iAva    = in.available();
+        byte[] bTab = new byte[iAva];
+        in.readFully(bTab);
+        return new String(bTab);
     }
 
     /**Methode permettant d'ecrire un message sur le flux reseau de sortie */
