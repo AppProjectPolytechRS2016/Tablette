@@ -186,6 +186,7 @@
                         android:layout_margin="@dimen/button_default_margin_10inches"
                         android:textSize="@dimen/button_textSize_10inches"
                         android:textColor="@color/color_button_font" />
+
                 </GridLayout>
 
                 <TextView
@@ -218,7 +219,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentStart="true"
                     android:columnCount="2"
-                    android:rowCount="5">
+                    android:rowCount="6">
 
                     <TextView
                         android:layout_width="@dimen/listView_width_10inches"
@@ -254,7 +255,8 @@
                         android:layout_column="0"
                         android:background="@color/color_list_background"
                         android:choiceMode="singleChoice"
-                        android:layout_gravity="center" />
+                        android:layout_gravity="center"
+                        android:clickable="true" />
 
                     <ListView
                         android:layout_width="@dimen/listView_width_10inches"
@@ -266,6 +268,17 @@
                         android:choiceMode="singleChoice"
                         android:layout_gravity="center" />
 
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mettre à jour la liste"
+                        android:id="@+id/buttonUpdateRobotList"
+                        android:layout_row="5"
+                        android:layout_column="0"
+                        android:layout_gravity="top|left|center"
+                        android:textSize="@dimen/button_textSize_10inches"
+                        android:textColor="@color/color_button_font" />
+
                 </GridLayout>
             </RelativeLayout>
 
@@ -273,13 +286,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/spaceBlock_height_10inches"
                 android:id="@+id/space3">
+
             </FrameLayout>
 
             <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/orderBlock_height_10inches"
                 android:id="@+id/orderBlock"
-                android:rowCount="8"
+                android:rowCount="9"
                 android:columnCount="2">
 
                 <TextView
@@ -305,10 +319,10 @@
                     android:layout_row="1">
 
                     <EditText
-                        android:layout_width="@dimen/ip_editText_width_10inches"
+                        android:layout_width="@dimen/listView_width_10inches"
                         android:layout_height="@dimen/ip_editText_height_10inches"
-                        android:id="@+id/editTextIPRobot1"
-                        android:inputType="number"
+                        android:id="@+id/editTextIPRobot"
+
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:layout_row="2"
@@ -320,105 +334,8 @@
                         android:layout_marginLeft="@dimen/default_margin_10inches"
                         android:layout_marginTop="@dimen/default_margin_10inches"
                         android:layout_marginRight="@dimen/default_margin_10inches"
-                        android:maxLength="3"
                         android:layout_weight="1"
                         android:imeOptions="actionNext" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/ip_dot_textHeight_10inches"
-                        android:text="."
-                        android:id="@+id/textView10"
-                        android:layout_row="2"
-                        android:layout_column="3"
-                        android:textStyle="bold"
-                        android:textSize="@dimen/ip_dot_textSize_10inches"
-                        android:textColor="@color/color_ipDot_font"
-                        android:layout_marginTop="@dimen/ip_dot_topMargin_10inches" />
-
-                    <EditText
-                        android:layout_width="@dimen/ip_editText_width_10inches"
-                        android:layout_height="@dimen/ip_editText_height_10inches"
-                        android:id="@+id/editTextIPRobot2"
-                        android:inputType="number"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:layout_row="2"
-                        android:layout_column="0"
-                        android:textSize="@dimen/editText_textSize_10inches"
-                        android:textIsSelectable="false"
-                        android:background="#fffae7ff"
-                        android:padding="@dimen/default_padding_10inches"
-                        android:layout_marginLeft="@dimen/default_margin_10inches"
-                        android:layout_marginTop="@dimen/default_margin_10inches"
-                        android:layout_marginRight="@dimen/default_margin_10inches"
-                        android:maxLength="3"
-                        android:layout_weight="1"
-                        android:imeOptions="actionNext" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/ip_dot_textHeight_10inches"
-                        android:text="."
-                        android:id="@+id/textView11"
-                        android:layout_row="2"
-                        android:layout_column="1"
-                        android:textStyle="bold"
-                        android:textSize="@dimen/ip_dot_textSize_10inches"
-                        android:textColor="@color/color_ipDot_font"
-                        android:layout_marginTop="@dimen/ip_dot_topMargin_10inches" />
-
-                    <EditText
-                        android:layout_width="@dimen/ip_editText_width_10inches"
-                        android:layout_height="@dimen/ip_editText_height_10inches"
-                        android:id="@+id/editTextIPRobot3"
-                        android:inputType="number"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:layout_row="2"
-                        android:layout_column="0"
-                        android:textSize="@dimen/editText_textSize_10inches"
-                        android:textIsSelectable="false"
-                        android:background="#fffae7ff"
-                        android:padding="5dp"
-                        android:layout_marginLeft="@dimen/default_margin_10inches"
-                        android:layout_marginTop="@dimen/default_margin_10inches"
-                        android:layout_marginRight="@dimen/default_margin_10inches"
-                        android:maxLength="3"
-                        android:layout_weight="1"
-                        android:imeOptions="actionNext" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/ip_dot_textHeight_10inches"
-                        android:text="."
-                        android:id="@+id/textView12"
-                        android:layout_row="2"
-                        android:layout_column="3"
-                        android:textStyle="bold"
-                        android:textSize="@dimen/ip_dot_textSize_10inches"
-                        android:textColor="@color/color_ipDot_font"
-                        android:layout_marginTop="@dimen/ip_dot_topMargin_10inches" />
-
-                    <EditText
-                        android:layout_width="@dimen/ip_editText_width_10inches"
-                        android:layout_height="@dimen/ip_editText_height_10inches"
-                        android:id="@+id/editTextIPRobot4"
-                        android:inputType="number"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:layout_row="2"
-                        android:layout_column="6"
-                        android:textSize="@dimen/editText_textSize_10inches"
-                        android:textIsSelectable="false"
-                        android:background="#fffae7ff"
-                        android:padding="@dimen/default_padding_10inches"
-                        android:layout_marginLeft="@dimen/default_margin_10inches"
-                        android:layout_marginTop="@dimen/default_margin_10inches"
-                        android:layout_marginRight="@dimen/right_margin_between_elmt_10inches"
-                        android:maxLength="3"
-                        android:layout_weight="1"
-                        android:imeOptions="actionDone" />
 
                     <Button
                         android:layout_width="wrap_content"

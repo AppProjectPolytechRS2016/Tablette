@@ -16,17 +16,15 @@ import android.view.View.OnClickListener;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.view.View;
 import android.net.wifi.WifiManager;
 import android.net.wifi.WifiInfo;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,6 +38,7 @@ public class MainActivity extends ActionBarActivity {
     private Button              buttonLogInRobot;
     private Button              buttonLogOutRobot;
     private Button              buttonLogOutRobotCM;
+    private Button              buttonUpdateRobotList;
 
     private RadioGroup          radioGroupOrder;
     private RadioButton         radButtonReccord ;
@@ -50,16 +49,14 @@ public class MainActivity extends ActionBarActivity {
     private EditText            editTextIPByte2CM ;
     private EditText            editTextIPByte3CM ;
     private EditText            editTextIPByte4CM ;
-    private EditText            editTextIPByte1Robot ;
-    private EditText            editTextIPByte2Robot ;
-    private EditText            editTextIPByte3Robot ;
-    private EditText            editTextIPByte4Robot ;
     private EditText            editTextXVal ;
     private EditText            editTextYVal ;
     private EditText            editTextAngleVal ;
 
     private ListView            robotList ;
     private ListView            featuresList ;
+
+    private TextView            editTextIPRobot ;
 
     private TextView            debugTextIPCM ;
     private TextView            debugTextIPRobot;
@@ -73,11 +70,6 @@ public class MainActivity extends ActionBarActivity {
     private int                 iByte2IP_Value ;
     private int                 iByte3IP_Value ;
     private int                 iByte4IP_Value ;
-
-    private int                 iByteRobotIP1_Value ;
-    private int                 iByteRobotIP2_Value ;
-    private int                 iByteRobotIP3_Value ;
-    private int                 iByteRobotIP4_Value ;
 
     private String              strIPRobot      = null;
     private String              strIPCM         = null;
@@ -95,11 +87,12 @@ public class MainActivity extends ActionBarActivity {
 
     private JSONObject          jsonOrder;
 
-    private String[]            stFeaturesList;
-    private String[]            stRobotList;
+    private ArrayList<String>   stFeaturesList = new ArrayList<String>();
+    private ArrayList<String>   stRobotList = new ArrayList<String>();
 
-    ArrayAdapter<String>        adapterFeatures;
-    ArrayAdapter<String>        adapterRobots;
+    private ArrayAdapter<String> ListAdapterRobot;
+    private ArrayAdapter<String> ListAdapterFeature;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +113,7 @@ public class MainActivity extends ActionBarActivity {
         this.buttonLogInRobot       = (Button)this.findViewById(R.id.buttonLogInRobot);
         this.buttonLogOutRobot      = (Button)this.findViewById(R.id.buttonLogOutRobot);
         this.buttonLogOutRobotCM    = (Button)this.findViewById(R.id.buttonLogOutRobotCM);
+        this.buttonUpdateRobotList  = (Button)this.findViewById(R.id.buttonUpdateRobotList);
 
         //Set links for the radio buttons
         this.radioGroupOrder        = (RadioGroup)this.findViewById(R.id.orderRadioGroup);
@@ -137,10 +131,7 @@ public class MainActivity extends ActionBarActivity {
         this.editTextIPByte3CM      = (EditText)this.findViewById(R.id.ipCMByte3) ;
         this.editTextIPByte4CM      = (EditText)this.findViewById(R.id.ipCMByte4) ;
 
-        this.editTextIPByte1Robot   = (EditText)this.findViewById(R.id.editTextIPRobot1) ;
-        this.editTextIPByte2Robot   = (EditText)this.findViewById(R.id.editTextIPRobot2) ;
-        this.editTextIPByte3Robot   = (EditText)this.findViewById(R.id.editTextIPRobot3) ;
-        this.editTextIPByte4Robot   = (EditText)this.findViewById(R.id.editTextIPRobot4) ;
+        this.editTextIPRobot        = (TextView)this.findViewById(R.id.editTextIPRobot) ;
 
         //Set links for the debug text views
         this.debugTextIPCM          = (TextView)this.findViewById(R.id.debugIPCM);
@@ -167,12 +158,6 @@ public class MainActivity extends ActionBarActivity {
         //Initialize the radio group
         radioGroupOrder.clearCheck();
 
-        //Disable the fields for the robot
-        editTextIPByte1Robot.setEnabled(false);
-        editTextIPByte2Robot.setEnabled(false);
-        editTextIPByte3Robot.setEnabled(false);
-        editTextIPByte4Robot.setEnabled(false);
-
         //Hide the buttons for the robot
         buttonLogInRobot.setVisibility(View.INVISIBLE);
         buttonSend.setVisibility(View.INVISIBLE);
@@ -189,7 +174,7 @@ public class MainActivity extends ActionBarActivity {
                 new OnClickListener() {
                     public void onClick(View v) {
                         try {
-                            int iTest       = 0;
+                            JSONObject jsonCM   = new JSONObject();
 
                             //Recover each byte value of the IP
                             iByte1IP_Value  = Integer.parseInt(editTextIPByte1CM.getText().toString());
@@ -206,12 +191,14 @@ public class MainActivity extends ActionBarActivity {
 
                             //If the IP address is valid
                             if (bCheckResult == true) {
-                                ExecutorService execServ = Executors.newFixedThreadPool(3);
-                                appTab      = new ApplicationTablet("tablet", iPortCMNum, execServ);
-                                iTest       = appTab.logInCM(strIPCM, iPortCMNum, tabletAddress);
+                                ExecutorService execServ    = Executors.newFixedThreadPool(3);
+                                appTab                      = new ApplicationTablet("tablet", iPortCMNum, execServ);
+                                jsonCM                      = appTab.logInCM(strIPCM, iPortCMNum, tabletAddress);
+
+                                debugParamMove.setText(jsonCM.get("RobotList").toString());
 
                                 //If the connection succeed
-                                if (iTest == 1) {
+                                if (jsonCM.get("MsgType").equals("Order") == true) {
                                     Toast.makeText(MainActivity.this, "La tablette est maintenant connectée au gestionnaire de communication.", Toast.LENGTH_LONG).show();
 
                                     //Hide the LogIn button and display the LogOut button
@@ -220,17 +207,30 @@ public class MainActivity extends ActionBarActivity {
                                     buttonLogInRobot.setVisibility(View.VISIBLE);
                                     buttonSend.setVisibility(View.VISIBLE);
 
+                                    if(jsonCM.get("RobotList").equals("null") == false) {
+
+                                        //Set the Robot list
+                                        JSONArray jArray = (JSONArray) jsonCM.get("RobotList");
+                                        ArrayList<String> sRobots = new ArrayList<String>();
+
+                                        int len = jArray.size();
+
+                                        for (int i = 0; i < len; i++) {
+                                            String stRobotIp = jArray.get(i).toString();
+                                            stRobotList.add(stRobotIp);
+                                        }
+
+                                        //Display the list
+                                        ListAdapterRobot = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, stRobotList);
+                                        robotList.setAdapter(ListAdapterRobot);
+                                    }
+
                                     //Disable the IP EditTexts
                                     editTextIPByte1CM.setEnabled(false);
                                     editTextIPByte2CM.setEnabled(false);
                                     editTextIPByte3CM.setEnabled(false);
                                     editTextIPByte4CM.setEnabled(false);
 
-                                    //Enable the fields for the robot
-                                    editTextIPByte1Robot.setEnabled(true);
-                                    editTextIPByte2Robot.setEnabled(true);
-                                    editTextIPByte3Robot.setEnabled(true);
-                                    editTextIPByte4Robot.setEnabled(true);
                                     buttonLogInRobot.setEnabled(true);
 
                                     bCheckResult    = false;
@@ -259,24 +259,19 @@ public class MainActivity extends ActionBarActivity {
                 new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        appTab.logOutCM();
+                        appTab.logOutCM(strIPCM, tabletAddress);
 
                         //Hide the LogOut button and show the LogIn button
                         buttonLogOutCM.setVisibility(View.INVISIBLE);
                         buttonLogInCM.setVisibility(View.VISIBLE);
                         Toast.makeText(MainActivity.this, "La tablette s'est déconnectée du serveur.", Toast.LENGTH_LONG).show();
 
+
                         //Enable the IPCM EditTexts
                         editTextIPByte1CM.setEnabled(true);
                         editTextIPByte2CM.setEnabled(true);
                         editTextIPByte3CM.setEnabled(true);
                         editTextIPByte4CM.setEnabled(true);
-
-                        //Disable the IP Robot EditTexts
-                        editTextIPByte1Robot.setEnabled(false);
-                        editTextIPByte2Robot.setEnabled(false);
-                        editTextIPByte3Robot.setEnabled(false);
-                        editTextIPByte4Robot.setEnabled(false);
 
                         //Clear the radio buttons
                         radioGroupOrder.clearCheck();
@@ -295,36 +290,22 @@ public class MainActivity extends ActionBarActivity {
                     public void onClick(View v) {
                         try {
                             int iTest = 0;
-                            JSONObject jsonRecieved     = new JSONObject();
+                            JSONObject jsonReceived     = new JSONObject();
 
                             //Re-initialize the bCheckResult variable
                             bCheckResult = false;
 
-                            //Recover each byte value of the IP
-                            iByteRobotIP1_Value = Integer.parseInt(editTextIPByte1Robot.getText().toString());
-                            iByteRobotIP2_Value = Integer.parseInt(editTextIPByte2Robot.getText().toString());
-                            iByteRobotIP3_Value = Integer.parseInt(editTextIPByte3Robot.getText().toString());
-                            iByteRobotIP4_Value = Integer.parseInt(editTextIPByte4Robot.getText().toString());
-
-                            // Check if the IP address is valid
-                            bCheckResult = CheckUserChoice.checkIP(iByte1IP_Value, iByte2IP_Value, iByte3IP_Value, iByte4IP_Value);
-
-                            //Display for debug
-                            strIPRobot = iByteRobotIP1_Value + "." + iByteRobotIP2_Value + "." + iByteRobotIP3_Value +"." +iByteRobotIP4_Value;
-                            debugTextIPRobot.setText("IP Robot : " + strIPRobot + " Check Res = " + bCheckResult);
-
-                            //If the IP address is valid
-                            if(bCheckResult == true){
                                 JSONObject jsonOrder = new JSONObject();
+
                                 jsonOrder.put("From", tabletAddress);
                                 jsonOrder.put("To", strIPRobot);
                                 jsonOrder.put("MsgType", "Order");
                                 jsonOrder.put("OrderName", "ConnectTo");
-                                jsonRecieved = appTab.sendOrder(jsonOrder);
+
+                                jsonReceived = appTab.sendOrder(jsonOrder);
 
                                 //If the tablet is connected to the robot
-                               /* if(jsonRecieved.get("MsgType").equals("Ack") == true){
-                                    if(jsonRecieved.get("Revieved").equals("True") == true){
+                                if(jsonReceived.get("MsgType").equals("Ack") == true){
                                         Toast.makeText(MainActivity.this, "La tablette est maintenant connectée au robot.", Toast.LENGTH_LONG).show();
 
                                         //Set the visibily of the log in and log out buttons
@@ -332,29 +313,24 @@ public class MainActivity extends ActionBarActivity {
                                         buttonLogOutRobot.setVisibility(View.VISIBLE);
                                         buttonLogOutRobotCM.setVisibility(View.VISIBLE);
 
-                                        //Disable the IP editText
-                                        editTextIPByte1Robot.setEnabled(false);
-                                        editTextIPByte2Robot.setEnabled(false);
-                                        editTextIPByte3Robot.setEnabled(false);
-                                        editTextIPByte4Robot.setEnabled(false);*/
+                                        //Set the Robot list
+                                        JSONArray jArray = (JSONArray)jsonReceived.get("FeatureList");
+                                        ArrayList<String> sFeatures = new ArrayList<String>();
 
-                                        try {
-                                            String test = jsonRecieved.toString();
+                                        int len         = jArray.size();
 
-                                            debugParamMove.setText(test);
+                                        for (int i=0;i<len;i++){
+                                            String stFeatureName    = jArray.get(i).toString();
+                                            stFeaturesList.add(stFeatureName);
                                         }
-                                        catch (Exception e){
-                                            e.printStackTrace();
-                                        }
+
+                                        //Display the list
+                                        ListAdapterFeature = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, stFeaturesList);
+                                        featuresList.setAdapter(ListAdapterFeature);
                                     }
-                              /*  else{
+                                else{
                                         Toast.makeText(MainActivity.this, "La tablette n'a pas puse connecter au robot.", Toast.LENGTH_LONG).show();
                                     }
-                                }
-                            }*/
-                            else {
-                                Toast.makeText(MainActivity.this, "L'adresse IP renseignée est invalide.", Toast.LENGTH_LONG).show();
-                            }
                         }
 
                         //If the IP address is not valid
@@ -374,14 +350,12 @@ public class MainActivity extends ActionBarActivity {
                         buttonLogInRobot.setVisibility(View.VISIBLE);
                         buttonLogOutRobotCM.setVisibility(View.INVISIBLE);
 
-                        //Disable the IP editText
-                        editTextIPByte1Robot.setEnabled(true);
-                        editTextIPByte2Robot.setEnabled(true);
-                        editTextIPByte3Robot.setEnabled(true);
-                        editTextIPByte4Robot.setEnabled(true);
-
                         //Clear the radio buttons
                         radioGroupOrder.clearCheck();
+
+                        //Clear the features list
+                        stFeaturesList.clear();
+                        featuresList.setAdapter(ListAdapterFeature);
 
                         //Hide the move parameters
                         rowMoveParam.setVisibility(View.INVISIBLE);
@@ -390,18 +364,11 @@ public class MainActivity extends ActionBarActivity {
                         //Send a message to the robot
                         JSONObject jsonOrder    = new JSONObject();
 
-                        try{
-                            jsonOrder.put("From", tabletAddress);
-                            jsonOrder.put("To", strIPRobot);
-                            jsonOrder.put("MsgType", "Order");
-                            jsonOrder.put("OrderName", "Disconnect");
+                         jsonOrder.put("From", tabletAddress);
+                         jsonOrder.put("To", strIPRobot);
+                         jsonOrder.put("MsgType", "Order");
+                         jsonOrder.put("OrderName", "Disconnect");
 
-                           // int iTest           = appTab.sendOrder(jsonOrder);
-                        }
-
-                        catch (JSONException e){
-                            e.printStackTrace();
-                        }
                     }
                 }
         );
@@ -412,21 +379,12 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                      public void onClick(View v) {
 
-                        int iTest     = 0;
-
-
                         JSONObject jsonOrder = new JSONObject();
 
-                        //Add the common fields for the JSONobject
-                        try {
-                            jsonOrder.put("From", tabletAddress);
-                            jsonOrder.put("To", strIPRobot);
-                            jsonOrder.put("MsgType", "Order");
-                            jsonOrder.put("OrderName", strChoosenOrder);
-                        }
-                        catch (JSONException e){
-                            e.printStackTrace();
-                        }
+                        jsonOrder.put("From", tabletAddress);
+                        jsonOrder.put("To", strIPRobot);
+                        jsonOrder.put("MsgType", "Order");
+                        jsonOrder.put("OrderName", strChoosenOrder);
 
                         if(strChoosenOrder.equals("Move")){
 
@@ -440,19 +398,13 @@ public class MainActivity extends ActionBarActivity {
                             iYValue             = CheckUserChoice.checkIntParam(strYVal);
                             iThetaValue         = CheckUserChoice.checkIntParam(strThetaVal);
 
-                            try {
-                                jsonOrder.put("From", tabletAddress);
-                                jsonOrder.put("To", strIPRobot);
-                                jsonOrder.put("MsgType", "Order");
-                                jsonOrder.put("OrderName", strChoosenOrder);
-                                jsonOrder.put("XValue", iXValue);
-                                jsonOrder.put("YValue", iYValue);
-                                jsonOrder.put("ThetaValue", iThetaValue);
-                            }
-                            catch (JSONException e){
-                                e.printStackTrace();
-                            }
-
+                            jsonOrder.put("From", tabletAddress);
+                            jsonOrder.put("To", strIPRobot);
+                            jsonOrder.put("MsgType", "Order");
+                            jsonOrder.put("OrderName", strChoosenOrder);
+                            jsonOrder.put("XValue", iXValue);
+                            jsonOrder.put("YValue", iYValue);
+                            jsonOrder.put("ThetaValue", iThetaValue);
                         }
 
                        // iTest = appTab.sendOrder(jsonOrder);
@@ -469,15 +421,9 @@ public class MainActivity extends ActionBarActivity {
                         JSONObject jsonOrder    = new JSONObject();
                         int iTest               = 0;
 
-                        try{
-                            jsonOrder.put("From", tabletAddress);
-                            jsonOrder.put("To", strIPRobot);
-                            jsonOrder.put("MsgType", "End");
-                        }
-
-                        catch(JSONException e){
-                            e.printStackTrace();
-                        }
+                        jsonOrder.put("From", tabletAddress);
+                        jsonOrder.put("To", strIPRobot);
+                        jsonOrder.put("MsgType", "End");
                     }
                 }
         );
@@ -507,6 +453,50 @@ public class MainActivity extends ActionBarActivity {
 
             }
         });
+
+        robotList.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        strIPRobot    = (String) robotList.getItemAtPosition(position);
+                        editTextIPRobot.setText(strIPRobot);
+                    }
+                }
+        );
+
+        buttonUpdateRobotList.setOnClickListener(
+                new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        stRobotList.clear();
+                        //robotList.setAdapter(ListAdapterRobot);
+
+
+                        jsonOrder   = new JSONObject();
+
+                        jsonOrder.put("From", tabletAddress);
+                        jsonOrder.put("To", strIPCM);
+                        jsonOrder.put("MsgType", "UpdateList");
+
+                        jsonOrder           = appTab.sendOrder(jsonOrder);
+
+                        //Set the Robot list
+                        JSONArray jArray    = (JSONArray)jsonOrder.get("RobotList");
+                        ArrayList<String> sRobots = new ArrayList<String>();
+
+                        int len             = jArray.size();
+
+                        for (int i=0;i<len;i++){
+                            String stRobotIp    = jArray.get(i).toString();
+                            stRobotList.add(stRobotIp);
+                        }
+
+                        //Display the list
+                        ListAdapterRobot = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, stRobotList);
+                        robotList.setAdapter(ListAdapterRobot);
+                    }
+                }
+        );
 
     }
 

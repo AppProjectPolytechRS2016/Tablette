@@ -11,8 +11,10 @@ import java.util.concurrent.ExecutorService;
 
 
 import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 
 /**
@@ -54,59 +56,66 @@ public class ApplicationTablet {
      * @return : an interger ; if 1 the connexion has been established
      * @Description : Connect the tablet to the comManager
      */
-    public int logInCM(String IPCMAddress, int iPortNum, String IPTablet)
+    public JSONObject logInCM(String IPCMAddress, int iPortNum, String IPTablet)
     {
+        JSONObject jsonRes      = new JSONObject();
         try
         {
             socketClient    = new Socket(IPCMAddress, iPortNum);
         }
         catch (IOException ex){
-            return -1;
+                ex.printStackTrace();
         }
 
         if(socketClient.isConnected()){
             try {
 
                 //Define the network stream from the comManager
-                this.in     = new DataInputStream(socketClient.getInputStream());
-                this.out    = new DataOutputStream(socketClient.getOutputStream());
+                this.in         = new DataInputStream(socketClient.getInputStream());
+                this.out        = new DataOutputStream(socketClient.getOutputStream());
 
                 //Create the JSONObject for the identification of the tablet
                JSONObject jsonIdent     = new JSONObject();
 
-               try {
-                    jsonIdent.put("From", IPTablet);
-                    jsonIdent.put("To", IPCMAddress);
-                    jsonIdent.put("MsgType", "Ident");
-                    jsonIdent.put("EquipmentType", "Tablet");
-                }
-                catch (JSONException e) {
-                    e.printStackTrace();
-                }
+               jsonIdent.put("From", IPTablet);
+               jsonIdent.put("To", IPCMAddress);
+               jsonIdent.put("MsgType", "Ident");
+               jsonIdent.put("EquipmentType", "Tablet");
 
                 //Send the JSONObject in a String format
                 this.writeMessageOnFlow(jsonIdent.toString() + "\r\n");
+
+                jsonRes         = this.treatReceivedMsg();
+                jsonRes.put("Stated", "Connected");
 
             }
             catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-                return -1;
             }
-            return 1;
         }
         else{
-            return 0;
+             jsonRes.put("State", "NoConnected");
         }
+
+        return jsonRes;
     }
 
     /**
      * @Function : deconnexionCM
      * @Descripton : Disconnect the tablet
      */
-    public void logOutCM()
+    public void logOutCM(String IPCM, String IPTablet)
     {
         try{
+            JSONObject jsonOrder    = new JSONObject();
+
+            jsonOrder.put("From", IPTablet);
+            jsonOrder.put("To", IPCM);
+            jsonOrder.put("MsgType", "Logout");
+
+            this.writeMessageOnFlow(jsonOrder.toString() + "\r\n");
+
             this.socketClient.close();
         }
         catch(IOException e){
@@ -121,31 +130,17 @@ public class ApplicationTablet {
      */
     public JSONObject sendOrder(JSONObject order)
     {
-        String strRecieved          = null;
-        JSONObject jsonRecieved     = new JSONObject();
+        JSONObject jsonReceived     = new JSONObject();
 
-        try{
-            this.writeMessageOnFlow(order.toString()  + "\r\n");
-
-            do {
-                try {
-                    strRecieved     = NetworkFlow.readMessage(in);
-                    Log.d("Debug", strRecieved.toString() + strRecieved.length());
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-            }while (strRecieved.length() == 0);
-
-            Object obj      = JSONValue.parse(strRecieved);
-            jsonRecieved    = (JSONObject) obj;
-
-         }
-        catch(Exception e){
+        try {
+            this.writeMessageOnFlow(order.toString() + "\r\n");
+            jsonReceived    = this.treatReceivedMsg();
+        }
+        catch (Exception e){
             e.printStackTrace();
         }
-        return jsonRecieved;
+
+        return jsonReceived;
 
     }
 
@@ -162,5 +157,41 @@ public class ApplicationTablet {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    /**
+     * @Function : treatReceivedMsg
+     * @Description : wait for a string on flow, then convert it to a JSONObject
+     * @return
+     */
+    public JSONObject treatReceivedMsg(){
+        String strReceived      = null;
+        JSONObject jsonReceived = new JSONObject();
+        JSONParser parser       = new JSONParser();
+        
+        do {
+            try {
+                strReceived     = NetworkFlow.readMessage(in);
+                Log.d("Debug", strReceived.toString());
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }while (strReceived.length() == 0);
+
+
+        Object obj = null;
+        try {
+            obj = parser.parse(strReceived);
+        }
+
+        catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        jsonReceived = (JSONObject) obj;
+        
+        return jsonReceived;
     }
 }
