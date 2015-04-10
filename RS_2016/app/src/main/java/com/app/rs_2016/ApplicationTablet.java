@@ -133,6 +133,7 @@ public class ApplicationTablet {
         JSONObject jsonReceived     = new JSONObject();
 
         try {
+            Log.d("Debug - JSON received", jsonReceived.toString());
             this.writeMessageOnFlow(order.toString() + "\r\n");
             jsonReceived    = this.treatReceivedMsg();
         }
@@ -172,7 +173,7 @@ public class ApplicationTablet {
         do {
             try {
                 strReceived     = NetworkFlow.readMessage(in);
-                Log.d("Debug", strReceived.toString());
+                Log.d("Debug - String received", strReceived.toString());
             }
             catch (IOException e) {
                 e.printStackTrace();

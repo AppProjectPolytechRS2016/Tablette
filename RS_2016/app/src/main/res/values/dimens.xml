@@ -16,6 +16,7 @@
 	<dimen name="tableOrder_width_10inches">400dp</dimen>
 	<dimen name="tableOrder_height_10inches">60dp</dimen>
 	<dimen name="sendBlock_height_10inches">50dp</dimen>
+    <dimen name="orderParam_height_10inches">60dp</dimen>
 	
     <!-- Define the text sizes to use -->
     <dimen name="title_textSize_10inches">30dp</dimen>
@@ -44,6 +45,7 @@
 	<dimen name="button_default_margin_10inches">10dp</dimen>
 	<dimen name="textView_default_leftMargin_10inches">10dp</dimen>
 	<dimen name="small_margin_10inches">2dp</dimen>
+    <dimen name="big_margin_10inches">20dp</dimen>
 
 
 </resources>

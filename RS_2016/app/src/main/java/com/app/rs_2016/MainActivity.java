@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem ;
 import android.widget.AdapterView;
@@ -37,13 +38,7 @@ public class MainActivity extends ActionBarActivity {
     private Button              buttonSend ;
     private Button              buttonLogInRobot;
     private Button              buttonLogOutRobot;
-    private Button              buttonLogOutRobotCM;
     private Button              buttonUpdateRobotList;
-
-    private RadioGroup          radioGroupOrder;
-    private RadioButton         radButtonReccord ;
-    private RadioButton         radButtonWalk ;
-    private RadioButton         radButtonMove ;
 
     private EditText            editTextIPByte1CM ;
     private EditText            editTextIPByte2CM ;
@@ -56,14 +51,10 @@ public class MainActivity extends ActionBarActivity {
     private ListView            robotList ;
     private ListView            featuresList ;
 
-    private TextView            editTextIPRobot ;
+    private TextView            textViewIPRobot ;
+    private TextView            textViewChoosenOrder ;
 
-    private TextView            debugTextIPCM ;
-    private TextView            debugTextIPRobot;
-    private TextView            debugTextIPTablet;
-    private TextView            debugParamMove;
-
-    private TableLayout            rowMoveParam;
+    private TableLayout         rowMoveParam;
 
     //Intern variables
     private int                 iByte1IP_Value ;
@@ -112,14 +103,7 @@ public class MainActivity extends ActionBarActivity {
         this.buttonSend             = (Button)this.findViewById(R.id.buttonSend);
         this.buttonLogInRobot       = (Button)this.findViewById(R.id.buttonLogInRobot);
         this.buttonLogOutRobot      = (Button)this.findViewById(R.id.buttonLogOutRobot);
-        this.buttonLogOutRobotCM    = (Button)this.findViewById(R.id.buttonLogOutRobotCM);
         this.buttonUpdateRobotList  = (Button)this.findViewById(R.id.buttonUpdateRobotList);
-
-        //Set links for the radio buttons
-        this.radioGroupOrder        = (RadioGroup)this.findViewById(R.id.orderRadioGroup);
-        this.radButtonMove          = (RadioButton)this.findViewById(R.id.radioButtonMove) ;
-        this.radButtonReccord       = (RadioButton)this.findViewById(R.id.radioButtonReccord) ;
-        this.radButtonWalk          = (RadioButton)this.findViewById(R.id.radioButtonWalk) ;
 
         //Set links for the edit texts
         this.editTextAngleVal       = (EditText)this.findViewById(R.id.editTextThetaVal) ;
@@ -131,13 +115,8 @@ public class MainActivity extends ActionBarActivity {
         this.editTextIPByte3CM      = (EditText)this.findViewById(R.id.ipCMByte3) ;
         this.editTextIPByte4CM      = (EditText)this.findViewById(R.id.ipCMByte4) ;
 
-        this.editTextIPRobot        = (TextView)this.findViewById(R.id.editTextIPRobot) ;
-
-        //Set links for the debug text views
-        this.debugTextIPCM          = (TextView)this.findViewById(R.id.debugIPCM);
-        this.debugTextIPRobot       = (TextView)this.findViewById(R.id.debugIPRobot);
-        this.debugTextIPTablet      = (TextView)this.findViewById(R.id.debugIPTablet);
-        this.debugParamMove         = (TextView)this.findViewById(R.id.debugMoveParam);
+        this.textViewIPRobot        = (TextView)this.findViewById(R.id.textViewIPRobot) ;
+        this.textViewChoosenOrder   = (TextView) this.findViewById(R.id.textViewChoosenOrder);
 
         //Set links for the lists
         this.robotList              = (ListView)this.findViewById(R.id.listViewRobot) ;
@@ -155,19 +134,13 @@ public class MainActivity extends ActionBarActivity {
         WifiInfo wifiInfo           = wifiMgr.getConnectionInfo();
         int ip                      = wifiInfo.getIpAddress();
 
-        //Initialize the radio group
-        radioGroupOrder.clearCheck();
-
         //Hide the buttons for the robot
         buttonLogInRobot.setVisibility(View.INVISIBLE);
         buttonSend.setVisibility(View.INVISIBLE);
         buttonLogOutRobot.setVisibility(View.INVISIBLE);
-        buttonLogOutRobotCM.setVisibility(View.INVISIBLE);
 
         //Convert to IP format
         tabletAddress               = String.format("%d.%d.%d.%d", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff), (ip >> 24 & 0xff));
-
-        debugTextIPTablet.setText("IP Tablet : " + tabletAddress);
 
         //Set the click listeners for the LogIn button
         buttonLogInCM.setOnClickListener(
@@ -187,15 +160,12 @@ public class MainActivity extends ActionBarActivity {
 
                             //Display for debug
                             strIPCM         = String.format("%d.%d.%d.%d", iByte1IP_Value, iByte2IP_Value, iByte3IP_Value, iByte4IP_Value);
-                            debugTextIPCM.setText("IP CM : " + strIPCM + " Check Res = " + bCheckResult);
 
                             //If the IP address is valid
                             if (bCheckResult == true) {
                                 ExecutorService execServ    = Executors.newFixedThreadPool(3);
                                 appTab                      = new ApplicationTablet("tablet", iPortCMNum, execServ);
                                 jsonCM                      = appTab.logInCM(strIPCM, iPortCMNum, tabletAddress);
-
-                                debugParamMove.setText(jsonCM.get("RobotList").toString());
 
                                 //If the connection succeed
                                 if (jsonCM.get("MsgType").equals("Order") == true) {
@@ -231,8 +201,6 @@ public class MainActivity extends ActionBarActivity {
                                     editTextIPByte3CM.setEnabled(false);
                                     editTextIPByte4CM.setEnabled(false);
 
-                                    buttonLogInRobot.setEnabled(true);
-
                                     bCheckResult    = false;
 
                                 }
@@ -264,17 +232,21 @@ public class MainActivity extends ActionBarActivity {
                         //Hide the LogOut button and show the LogIn button
                         buttonLogOutCM.setVisibility(View.INVISIBLE);
                         buttonLogInCM.setVisibility(View.VISIBLE);
+                        buttonLogInRobot.setVisibility(View.VISIBLE);
                         Toast.makeText(MainActivity.this, "La tablette s'est déconnectée du serveur.", Toast.LENGTH_LONG).show();
 
+                        //Clear robot and feature list
+                        stFeaturesList.clear();
+                        featuresList.setAdapter(ListAdapterFeature);
+
+                        stRobotList.clear();
+                        robotList.setAdapter(ListAdapterRobot);
 
                         //Enable the IPCM EditTexts
                         editTextIPByte1CM.setEnabled(true);
                         editTextIPByte2CM.setEnabled(true);
                         editTextIPByte3CM.setEnabled(true);
                         editTextIPByte4CM.setEnabled(true);
-
-                        //Clear the radio buttons
-                        radioGroupOrder.clearCheck();
 
                         //Hide the robot's parameters
                         rowMoveParam.setVisibility(View.INVISIBLE);
@@ -294,6 +266,8 @@ public class MainActivity extends ActionBarActivity {
 
                             //Re-initialize the bCheckResult variable
                             bCheckResult = false;
+                            stFeaturesList.clear();
+                            stRobotList.clear();
 
                                 JSONObject jsonOrder = new JSONObject();
 
@@ -311,7 +285,6 @@ public class MainActivity extends ActionBarActivity {
                                         //Set the visibily of the log in and log out buttons
                                         buttonLogInRobot.setVisibility(View.INVISIBLE);
                                         buttonLogOutRobot.setVisibility(View.VISIBLE);
-                                        buttonLogOutRobotCM.setVisibility(View.VISIBLE);
 
                                         //Set the Robot list
                                         JSONArray jArray = (JSONArray)jsonReceived.get("FeatureList");
@@ -327,9 +300,12 @@ public class MainActivity extends ActionBarActivity {
                                         //Display the list
                                         ListAdapterFeature = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, stFeaturesList);
                                         featuresList.setAdapter(ListAdapterFeature);
+
+                                        buttonSend.setVisibility(View.VISIBLE);
                                     }
+
                                 else{
-                                        Toast.makeText(MainActivity.this, "La tablette n'a pas puse connecter au robot.", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(MainActivity.this, "La tablette n'a pas pu se connecter au robot.", Toast.LENGTH_LONG).show();
                                     }
                         }
 
@@ -347,11 +323,6 @@ public class MainActivity extends ActionBarActivity {
                     @Override
                     public void onClick(View v) {
                         //Show the LogIn button
-                        buttonLogInRobot.setVisibility(View.VISIBLE);
-                        buttonLogOutRobotCM.setVisibility(View.INVISIBLE);
-
-                        //Clear the radio buttons
-                        radioGroupOrder.clearCheck();
 
                         //Clear the features list
                         stFeaturesList.clear();
@@ -368,6 +339,10 @@ public class MainActivity extends ActionBarActivity {
                          jsonOrder.put("To", strIPRobot);
                          jsonOrder.put("MsgType", "Order");
                          jsonOrder.put("OrderName", "Disconnect");
+
+                        JSONObject jsonReceived     = new JSONObject();
+                        jsonReceived                = appTab.sendOrder(jsonOrder);
+                        Log.d("Debug - JSON received", jsonReceived.toString());
 
                     }
                 }
@@ -407,59 +382,49 @@ public class MainActivity extends ActionBarActivity {
                             jsonOrder.put("ThetaValue", iThetaValue);
                         }
 
-                       // iTest = appTab.sendOrder(jsonOrder);
+                        JSONObject jsonReceived        = new JSONObject();
+                        jsonReceived = appTab.sendOrder(jsonOrder);
 
+                        if(jsonReceived.get("OrderAccepted") == true) {
+                            buttonLogInRobot.setVisibility(View.VISIBLE);
+                            buttonLogOutRobot.setVisibility(View.INVISIBLE);
+                            Toast.makeText(MainActivity.this, "Ordre accepté par le robot.", Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(MainActivity.this, "L'ordre n'a pas pu être accepté par le robot.", Toast.LENGTH_LONG).show();
+                        }
                      }
                 }
         );
-
-        //Set the ClickListener for the button that disconnect the robot from the conManager
-        buttonLogOutRobotCM.setOnClickListener(
-                new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        JSONObject jsonOrder    = new JSONObject();
-                        int iTest               = 0;
-
-                        jsonOrder.put("From", tabletAddress);
-                        jsonOrder.put("To", strIPRobot);
-                        jsonOrder.put("MsgType", "End");
-                    }
-                }
-        );
-
-        /* Attach CheckedChangeListener to radio group */
-        radioGroupOrder.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-
-                RadioButton rbSelected      = (RadioButton) group.findViewById(checkedId);
-                int iTest                   = 0;
-
-                //If a radio button is checked
-                if(null != rbSelected && checkedId > -1){
-                    //Recover the order name
-                    strChoosenOrder  = CheckUserChoice.recoverOrderName(String.valueOf(rbSelected.getText()));
-
-                    //If the selected order is "Move"
-                    if(strChoosenOrder.equals("Move")){
-                        rowMoveParam.setVisibility(View.VISIBLE);
-                    }
-
-                    else{
-                        rowMoveParam.setVisibility(View.INVISIBLE);
-                    }
-                }
-
-            }
-        });
+;
 
         robotList.setOnItemClickListener(
                 new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         strIPRobot    = (String) robotList.getItemAtPosition(position);
-                        editTextIPRobot.setText(strIPRobot);
+                        textViewIPRobot.setText(strIPRobot);
+                    }
+                }
+        );
+
+        featuresList.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        strChoosenOrder    = (String) featuresList.getItemAtPosition(position);
+
+                        textViewChoosenOrder.setText(strChoosenOrder);
+
+                        //If the selected order is "Move"
+                        if(strChoosenOrder.equals("Move")){
+                            rowMoveParam.setVisibility(View.VISIBLE);
+                        }
+
+                        else{
+                            rowMoveParam.setVisibility(View.INVISIBLE);
+                        }
+
                     }
                 }
         );
@@ -480,20 +445,25 @@ public class MainActivity extends ActionBarActivity {
 
                         jsonOrder           = appTab.sendOrder(jsonOrder);
 
-                        //Set the Robot list
-                        JSONArray jArray    = (JSONArray)jsonOrder.get("RobotList");
-                        ArrayList<String> sRobots = new ArrayList<String>();
+                        if(jsonOrder.get("RobotList").equals("null") == false) {
+                            //Set the Robot list
+                            JSONArray jArray = (JSONArray) jsonOrder.get("RobotList");
+                            ArrayList<String> sRobots = new ArrayList<String>();
 
-                        int len             = jArray.size();
+                            int len = jArray.size();
 
-                        for (int i=0;i<len;i++){
-                            String stRobotIp    = jArray.get(i).toString();
-                            stRobotList.add(stRobotIp);
+                            for (int i = 0; i < len; i++) {
+                                String stRobotIp = jArray.get(i).toString();
+                                stRobotList.add(stRobotIp);
+                            }
+
+                            //Display the list
+                            ListAdapterRobot = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, stRobotList);
+                            robotList.setAdapter(ListAdapterRobot);
                         }
-
-                        //Display the list
-                        ListAdapterRobot = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_list_item_1, stRobotList);
-                        robotList.setAdapter(ListAdapterRobot);
+                        else{
+                            Toast.makeText(MainActivity.this, "Il n'y a pas de robots connectés.", Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
         );
