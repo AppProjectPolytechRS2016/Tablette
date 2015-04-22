@@ -1,5 +1,5 @@
 <resources>
-
+    <!-- This file contains the translation in French -->
     <string name="action_settings">Paramètres</string>
     <string name="app_name">RS 2016</string>
     <string name="hello_world">Bonjour !</string>

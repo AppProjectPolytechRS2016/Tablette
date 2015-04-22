@@ -1,4 +1,5 @@
 <resources>
+    <!-- This file contains the translation in English, which is the default language -->
     <string name="app_name">RS 2016</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
