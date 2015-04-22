@@ -1,0 +1,46 @@
+<resources>
+
+    <string name="action_settings">Parámetros</string>
+    <string name="app_name">RS 2016</string>
+    <string name="hello_world">Buenos días</string>
+
+    <!-- Strings for the title -->
+    <string name="app_Title">Gestión de los robots</string>
+
+    <!-- Strings for IP block -->
+    <string name="ipBlock_LogInCMButton">Conexión</string>
+    <string name="ipBlock_LogOutCMButton">Desconexión</string>
+    <string name="ipBlock_BlockName">Dirección IP del Gerente de Comunicación</string>
+
+    <!-- Strings for the listBlock -->
+    <string name="listBlock_featuresList">Lista de las funcionalidades</string>
+    <string name="listBlock_robotList">Lista de los robots</string>
+    <string name="listBlock_Update">Actualizada lista</string>
+
+    <!--Strings for the orderBlock -->
+    <string name="orderBlock_ChoosenOrder">Orden escogida :</string>
+    <string name="orderBlock_IPRobot">Dirección IP del robot</string>
+    <string name="orderBlock_LogInRobot">Conexión</string>
+    <string name="orderBlock_LogOutRobot">Desconexión</string>
+    <string name="orderBlock_ThetaValue">Ángulo en grados</string>
+    <string name="orderBlock_XValue">X en cm</string>
+    <string name="orderBlock_YValue">Y en cm</string>
+    <string name="orderBlock_buttonSend">Enviar</string>
+
+    <string name="toast_ip_Msg1">La tableta es conectada al Gerente de Comunicación.</string>
+    <string name="toast_ip_Msg2">La conexión al Gerente de Comunicación fue suspendida.</string>
+    <string name="toast_ip_Msg3">La dirección IP es inválida</string>
+    <string name="toast_ip_Msg4">La tableta es desconectada del Gerente de Comunicación.</string>
+
+    <string name="toast_robot_Msg1">La tableta es conectada al robot.</string>
+    <string name="toast_robot_Msg2">La conexión al robot fue suspendida.</string>
+    <string name="toast_robot_Msg3">Por favor, escoja un robot.</string>
+    <string name="toast_robot_Msg4">Conexión imposible. Por favor compruebe la dirección IP del robot.</string>
+    <string name="toast_robot_Msg5">La tableta es desconectada del robot.</string>
+    <string name="toast_robot_Msg6">La lista de robot está vacía.</string>
+
+    <string name="toast_order_Msg1">Orden aceptada por el robot.</string>
+    <string name="toast_order_Msg2">Orden rechazada por el robot</string>
+    <string name="toast_order_Msg3">Por favor seleccione una orden</string>
+
+</resources>

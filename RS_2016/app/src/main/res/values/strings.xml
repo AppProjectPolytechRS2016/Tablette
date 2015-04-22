@@ -1,6 +1,45 @@
 <resources>
-    <string name="app_name">RS_2016</string>
-
+    <string name="app_name">RS 2016</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Strings for the title -->
+    <string name="app_Title">APP RS 2016 - Management of the robots</string>
+
+    <!-- Strings for IP block -->
+    <string name="ipBlock_BlockName">IP address of the Communication Manager</string>
+    <string name="ipBlock_LogInCMButton">Log in</string>
+    <string name="ipBlock_LogOutCMButton">Log out</string>
+
+    <!-- Strings for the listBlock -->
+    <string name="listBlock_robotList">List of robots</string>
+    <string name="listBlock_featuresList">List of features</string>
+    <string name="listBlock_Update">Update list</string>
+
+    <!--Strings for the orderBlock -->
+    <string name="orderBlock_IPRobot">IP address of the Robot</string>
+    <string name="orderBlock_LogInRobot">Log in</string>
+    <string name="orderBlock_LogOutRobot">Log out</string>
+    <string name="orderBlock_XValue">X in cm</string>
+    <string name="orderBlock_YValue">Y in cm</string>
+    <string name="orderBlock_ThetaValue">Angle in degrees</string>
+    <string name="orderBlock_ChoosenOrder">Chosen order :</string>
+    <string name="orderBlock_buttonSend">Send</string>
+
+    <!--Strings to display in Toast pop up -->
+    <string name="toast_ip_Msg1">The tablet is now connected to the Communication Manager.</string>
+    <string name="toast_ip_Msg2">Failed to connect to the Communication Manager.</string>
+    <string name="toast_ip_Msg3">Informed IP address invalid.</string>
+    <string name="toast_ip_Msg4">Tablet disconnected from Communication Manager.</string>
+
+    <string name="toast_robot_Msg1">The tablet is now connected to the robot.</string>
+    <string name="toast_robot_Msg2">Connection to the robot failed.</string>
+    <string name="toast_robot_Msg3">Please select a robot.</string>
+    <string name="toast_robot_Msg4">Connection impossible. Please check the IP address of the robot.</string>
+    <string name="toast_robot_Msg5">The tablet is now disconnected from the robot.</string>
+    <string name="toast_robot_Msg6">The list of robots is empty.</string>
+
+    <string name="toast_order_Msg1">Order accepted by the robot.</string>
+    <string name="toast_order_Msg2">Order refused b the robot.</string>
+    <string name="toast_order_Msg3">Please select an order.</string>
 </resources>

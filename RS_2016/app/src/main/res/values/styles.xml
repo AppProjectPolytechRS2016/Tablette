@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <!-- Define the colors for the app -->
+    <!-- Define the colors for the application -->
     <color name="color_genral_background">#ff1A0606</color>
 
     <color name="color_block_background">#ff300b0b</color>

@@ -1,0 +1,48 @@
+<resources>
+
+    <string name="action_settings">Paramètres</string>
+    <string name="app_name">RS 2016</string>
+    <string name="hello_world">Bonjour !</string>
+
+    <!-- Strings for the title -->
+    <string name="app_Title">APP RS 2016 - Gestion des robots</string>
+
+    <!-- Strings for IP block -->
+    <string name="ipBlock_BlockName">Adresse IP du Gestionnaire de communication</string>
+    <string name="ipBlock_LogInCMButton">Connexion</string>
+    <string name="ipBlock_LogOutCMButton">Déconnexion</string>
+
+    <!-- Strings for the listBlock -->
+    <string name="listBlock_robotList">Liste des robots</string>
+    <string name="listBlock_featuresList">Liste des fonctionnalités</string>
+    <string name="listBlock_Update">Mettre à jour la liste</string>
+
+    <!--Strings for the orderBlock -->
+    <string name="orderBlock_IPRobot">Adresse IP Robot</string>
+    <string name="orderBlock_LogInRobot">Connexion</string>
+    <string name="orderBlock_LogOutRobot">Déconnexion</string>
+    <string name="orderBlock_XValue">X en cm</string>
+    <string name="orderBlock_YValue">Y en cm</string>
+    <string name="orderBlock_ThetaValue">Angle en degrés</string>
+    <string name="orderBlock_ChoosenOrder">Ordre choisi :</string>
+    <string name="orderBlock_buttonSend">Envoyer</string>
+
+    <!--Strings to display in Toast pop up -->
+    <string name="toast_ip_Msg1">La tablette est maintenant connectée au gestionnaire de communication.></string>
+    <string name="toast_ip_Msg2">La connexion au gestionnaire de communication a échouée.</string>
+    <string name="toast_ip_Msg3">Adresse IP renseignée invalide.</string>
+    <string name="toast_ip_Msg4">Tablette est maintenant déconnectée du gestionnaire de communication.</string>
+
+    <string name="toast_robot_Msg1">La tablette est maintenant connectée au robot.</string>
+    <string name="toast_robot_Msg2">La connexion au robot a échouée.</string>
+    <string name="toast_robot_Msg3">Aucun robot sélectionné.</string>
+    <string name="toast_robot_Msg4">Connexion impossible. Vérifiez adresse IP du robot.</string>
+    <string name="toast_robot_Msg5">La tablette est maintenant déconnectée du robot.</string>
+    <string name="toast_robot_Msg6">La liste de robots connectés est vide.</string>
+
+    <string name="toast_order_Msg1">Ordre accepté par le robot.</string>
+    <string name="toast_order_Msg2">Ordre refusé par le robot.</string>
+    <string name="toast_order_Msg3">Veuillez choisir un ordre.</string>
+
+
+</resources>

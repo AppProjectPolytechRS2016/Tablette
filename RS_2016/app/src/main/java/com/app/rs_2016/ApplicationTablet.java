@@ -22,6 +22,7 @@ import org.json.simple.parser.ParseException;
  */
 public class ApplicationTablet {
 
+    //Declarations
     ExecutorService             execServ;
     Socket                      socketClient    = null;
 
@@ -49,7 +50,7 @@ public class ApplicationTablet {
 
 
     /**
-     * @Function : connexionCM
+     * @Function : logInCM
      * @param IPCMAddress : IP address of the comManager
      * @param iPortNum : port number used for the communication with the comManager
      * @param IPTablet : IP address of the tabler
@@ -58,9 +59,12 @@ public class ApplicationTablet {
      */
     public JSONObject logInCM(String IPCMAddress, int iPortNum, String IPTablet)
     {
+        //Declarations
         JSONObject jsonRes      = new JSONObject();
+
         try
         {
+            //Create a new socket
             socketClient    = new Socket(IPCMAddress, iPortNum);
         }
         catch (IOException ex){
@@ -85,6 +89,7 @@ public class ApplicationTablet {
                 //Send the JSONObject in a String format
                 this.writeMessageOnFlow(jsonIdent.toString() + "\r\n");
 
+                //Processing for the received message
                 jsonRes         = this.treatReceivedMsg();
                 jsonRes.put("Stated", "Connected");
 
@@ -95,25 +100,29 @@ public class ApplicationTablet {
             }
         }
         else{
-             jsonRes.put("State", "NoConnected");
+             jsonRes.put("State", "NotConnected");
         }
 
         return jsonRes;
     }
 
     /**
-     * @Function : deconnexionCM
-     * @Descripton : Disconnect the tablet
+     * @Function : logoutCM
+     * @param IPCM : IP address of the comManager
+     * @param IPTablet : IP address of the tablet
+     * @Descripton : Disconnect the tablet from the comManager
      */
     public void logOutCM(String IPCM, String IPTablet)
     {
         try{
             JSONObject jsonOrder    = new JSONObject();
 
+            //Create the JSON object
             jsonOrder.put("From", IPTablet);
             jsonOrder.put("To", IPCM);
             jsonOrder.put("MsgType", "Logout");
 
+            //Write the message on the flow
             this.writeMessageOnFlow(jsonOrder.toString() + "\r\n");
 
             this.socketClient.close();
@@ -126,15 +135,21 @@ public class ApplicationTablet {
     /**
      * @Function : sendOrder
      * @param order : the JSONObject corresponding to the order to send
-     * @Description :
+     * @Description : this method enables to send message to another equipment
      */
     public JSONObject sendOrder(JSONObject order)
     {
+        //Declarations
         JSONObject jsonReceived     = new JSONObject();
 
         try {
+            //Display for debug
             Log.d("Debug - JSON received", jsonReceived.toString());
+
+            //Write message on flow
             this.writeMessageOnFlow(order.toString() + "\r\n");
+
+            //Processing for the received message
             jsonReceived    = this.treatReceivedMsg();
         }
         catch (Exception e){
@@ -142,7 +157,6 @@ public class ApplicationTablet {
         }
 
         return jsonReceived;
-
     }
 
     /**
@@ -154,7 +168,8 @@ public class ApplicationTablet {
     {
         try {
             NetworkFlow.writeMessage(out, message);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
@@ -166,13 +181,18 @@ public class ApplicationTablet {
      * @return
      */
     public JSONObject treatReceivedMsg(){
+        //Declarations
         String strReceived      = null;
         JSONObject jsonReceived = new JSONObject();
         JSONParser parser       = new JSONParser();
-        
+
+        //Wait until a String appears on the flow
         do {
             try {
+                //Recover the string on the flow
                 strReceived     = NetworkFlow.readMessage(in);
+
+                //Display for debug
                 Log.d("Debug - String received", strReceived.toString());
             }
             catch (IOException e) {
@@ -184,6 +204,7 @@ public class ApplicationTablet {
 
         Object obj = null;
         try {
+            //Parse the String into an object
             obj = parser.parse(strReceived);
         }
 
@@ -191,6 +212,7 @@ public class ApplicationTablet {
             e.printStackTrace();
         }
 
+        //Convert the object into a JSON object
         jsonReceived = (JSONObject) obj;
         
         return jsonReceived;

@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.app.rs_2016" >
 
+    <!-- Specify the supported screens -->
     <supports-screens android:smallScreens="true"
         android:normalScreens="true"
         android:largeScreens="true"
@@ -10,6 +11,7 @@
         android:resizeable="true"/>
 
 
+    <!-- Set the permissions in order to access to the Wifi -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
