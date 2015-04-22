@@ -30,21 +30,6 @@ public class CheckUserChoice {
         return bResult;
     }
 
-    /**
-     *@function : check the value of the angle
-     * @param iAngleToTest
-     * @return
-     */
-    public static boolean checkAngle(int iAngleToTest)
-    {
-        boolean bResult     = false;
-
-        if((iAngleToTest >= -360) && (iAngleToTest <= 360))
-        {
-            bResult         = true;
-        }
-        return bResult;
-    }
 
     /**
      * @function : check and convert the string to an integer

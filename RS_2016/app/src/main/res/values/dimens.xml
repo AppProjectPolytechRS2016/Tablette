@@ -8,11 +8,11 @@
     <!-- Dimensions for the blocks that form the layout of the app -->
     <dimen name="titleBlock_editText_height_10inches">50dp</dimen>
     <dimen name="ipBlock_height_10inches">100dp</dimen>
-    <dimen name="listBlock_height_10inches">500dp</dimen>
-    <dimen name="orderBlock_height_10inches">370dp</dimen>
+    <dimen name="listBlock_height_10inches">400dp</dimen>
+    <dimen name="orderBlock_height_10inches">260dp</dimen>
     <dimen name="spaceBlock_height_10inches">10dp</dimen>
 	<dimen name="listView_width_10inches">380dp</dimen>
-	<dimen name="listView_height_10inches">420dp</dimen>
+	<dimen name="listView_height_10inches">320dp</dimen>
 	<dimen name="tableOrder_width_10inches">400dp</dimen>
 	<dimen name="tableOrder_height_10inches">60dp</dimen>
 	<dimen name="sendBlock_height_10inches">50dp</dimen>
