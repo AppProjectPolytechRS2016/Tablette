@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.view.View.OnClickListener;
 import android.widget.RadioButton;
@@ -108,7 +109,6 @@ public class MainActivity extends ActionBarActivity {
         //Convert to IP format
         tabletAddress               = String.format("%d.%d.%d.%d", (ip & 0xff), (ip >> 8 & 0xff), (ip >> 16 & 0xff), (ip >> 24 & 0xff));
 
-
         /*-------- Set links for the components --------*/
         //Set links for the buttons
         this.buttonLogInCM          = (Button)this.findViewById(R.id.buttonLogInCM) ;
@@ -136,6 +136,7 @@ public class MainActivity extends ActionBarActivity {
         this.featuresList           = (ListView)this.findViewById(R.id.listViewFeatures) ;
 
         rowMoveParam                = (TableLayout)this.findViewById(R.id.moveParam);
+
 
 
         /*-------- Set visibility for the different components --------*/
@@ -181,11 +182,13 @@ public class MainActivity extends ActionBarActivity {
                                 //Send the JSON to start a communication with the comManager
                                 jsonCM                      = appTab.logInCM(strIPCM, iPortCMNum, tabletAddress);
 
+                                Log.i("JSON - LogInCM", jsonCM.toString());
+
                                 //If the connection succeed
                                 if (jsonCM.get("MsgType").equals("Order") == true) {
                                     Toast.makeText(MainActivity.this, R.string.toast_ip_Msg1, Toast.LENGTH_LONG).show();
 
-                                    //Change ListView backgounds
+                                    //Change ListView backgrounds
                                     robotList.setBackgroundColor(0xffBA7F78);
                                     featuresList.setBackgroundColor(0xffBA7F78);
 
@@ -315,8 +318,11 @@ public class MainActivity extends ActionBarActivity {
                                 //Send the order to the robot
                                 jsonReceived                        = appTab.sendOrder(jsonOrder);
 
+                                Log.i("JSON - LogInRobot", jsonReceived.toString());
+                                Log.i("JSON - test", String.valueOf(jsonReceived.get("OrderAccepted").toString().equals("true")));
+
                                 //If the tablet is connected to the robot
-                                if ((jsonReceived.get("MsgType").equals("Ack") == true) && (jsonReceived.get("OrderAccepted") == true)) {
+                                if ((jsonReceived.get("MsgType").equals("Ack") == true) && (jsonReceived.get("OrderAccepted").toString().equals("true") == true)) {
                                     Toast.makeText(MainActivity.this, R.string.toast_robot_Msg1, Toast.LENGTH_LONG).show();
 
                                     //Set the visibily of the log in and log out buttons
@@ -346,7 +352,8 @@ public class MainActivity extends ActionBarActivity {
                                     robotList.setEnabled(false);
 
                                     buttonSend.setVisibility(View.VISIBLE);
-                                } else {
+                                }
+                                else {
                                     Toast.makeText(MainActivity.this, R.string.toast_robot_Msg2, Toast.LENGTH_LONG).show();
                                 }
                             }
@@ -394,13 +401,13 @@ public class MainActivity extends ActionBarActivity {
                         jsonReceived                = appTab.sendOrder(jsonOrder);
 
                         //Display for debug
-                        Log.d("Debug - JSON received", jsonReceived.toString());
+                        Log.i("JSON - LogOutRobot", jsonReceived.toString());
 
                         //Enable the robot list
                         robotList.setEnabled(true);
 
                         //If the tablet has been logged out from the robot
-                        if(jsonReceived.get("Disconnected") == true) {
+                        if(jsonReceived.get("Disconnected").toString().equals("true") == true) {
                             Toast.makeText(MainActivity.this, R.string.toast_robot_Msg5, Toast.LENGTH_LONG).show();
 
                             //Set visibility for the buttons
@@ -462,8 +469,10 @@ public class MainActivity extends ActionBarActivity {
                             //Send the order to the robot
                             jsonReceived = appTab.sendOrder(jsonOrder);
 
+                            Log.i("JSON - SendOrder", jsonReceived.toString());
+
                             //If the order has been accepted by the robot
-                            if (jsonReceived.get("OrderAccepted") == true) {
+                            if (jsonReceived.get("OrderAccepted").toString().equals("true") == true) {
                                 //Set visibility for the different components
                                 buttonLogInRobot.setVisibility(View.VISIBLE);
                                 buttonLogOutRobot.setVisibility(View.INVISIBLE);
@@ -563,6 +572,8 @@ public class MainActivity extends ActionBarActivity {
 
                         //Send the JSON object to the comManager
                         jsonOrder                       = appTab.sendOrder(jsonOrder);
+
+                        Log.i("JSON - UpdateList", jsonOrder.toString());
 
                         //If the receive list is not empty
                         if(jsonOrder.get("RobotList").equals("null") == false) {
