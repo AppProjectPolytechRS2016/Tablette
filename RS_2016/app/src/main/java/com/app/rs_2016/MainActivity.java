@@ -12,11 +12,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.view.View.OnClickListener;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.view.View;
@@ -24,15 +22,21 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.WifiInfo;
 import android.widget.Toast;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements SensorEventListener{
     //Declaration of the different elements
     private Button              buttonLogInCM ;
     private Button              buttonLogOutCM ;
@@ -40,6 +44,8 @@ public class MainActivity extends ActionBarActivity {
     private Button              buttonLogInRobot;
     private Button              buttonLogOutRobot;
     private Button              buttonUpdateRobotList;
+    private Button              buttonInitAngle;
+    private Button              buttonSetAngle;
 
     private EditText            editTextIPByte1CM ;
     private EditText            editTextIPByte2CM ;
@@ -54,14 +60,21 @@ public class MainActivity extends ActionBarActivity {
 
     private TextView            textViewIPRobot ;
     private TextView            textViewChosenOrder ;
+    private TextView            textViewAngle;
 
     private TableLayout         rowMoveParam;
+
+    private LinearLayout        layoutAngle;
 
     //Intern variables
     private int                 iByte1IP_Value ;
     private int                 iByte2IP_Value ;
     private int                 iByte3IP_Value ;
     private int                 iByte4IP_Value ;
+    private int                 iCalcAngle      = 0;
+
+    private float               fInitAngle      = 0.f;
+    private float               fEndAngle       = 0.f;
 
     private String              strIPRobot      = null;
     private String              strIPCM         = null;
@@ -85,6 +98,11 @@ public class MainActivity extends ActionBarActivity {
 
     private ArrayAdapter<String> ListAdapterRobot;
     private ArrayAdapter<String> ListAdapterFeature;
+
+    //Define objects for Sensors
+    private SensorManager        sManager;
+    private float                fZ_old = 0;
+    SensorEventListener          sListener;
 
 
     @Override
@@ -117,6 +135,8 @@ public class MainActivity extends ActionBarActivity {
         this.buttonLogInRobot       = (Button)this.findViewById(R.id.buttonLogInRobot);
         this.buttonLogOutRobot      = (Button)this.findViewById(R.id.buttonLogOutRobot);
         this.buttonUpdateRobotList  = (Button)this.findViewById(R.id.buttonUpdateRobotList);
+        this.buttonInitAngle        = (Button)this.findViewById(R.id.buttonInitAngle);
+        this.buttonSetAngle         = (Button)this.findViewById(R.id.buttonSetAngle);
 
         //Set links for the edit texts
         this.editTextAngleVal       = (EditText)this.findViewById(R.id.editTextThetaVal) ;
@@ -129,7 +149,8 @@ public class MainActivity extends ActionBarActivity {
         this.editTextIPByte4CM      = (EditText)this.findViewById(R.id.ipCMByte4) ;
 
         this.textViewIPRobot        = (TextView)this.findViewById(R.id.textViewIPRobot) ;
-        this.textViewChosenOrder   = (TextView) this.findViewById(R.id.textViewChosenOrder);
+        this.textViewChosenOrder    = (TextView)this.findViewById(R.id.textViewChosenOrder);
+        this.textViewAngle          = (TextView)this.findViewById(R.id.textViewAngle);
 
         //Set links for the lists
         this.robotList              = (ListView)this.findViewById(R.id.listViewRobot) ;
@@ -137,11 +158,14 @@ public class MainActivity extends ActionBarActivity {
 
         rowMoveParam                = (TableLayout)this.findViewById(R.id.moveParam);
 
+        //Set links for the layouts
+        this.layoutAngle            = (LinearLayout)this.findViewById(R.id.gyroBlock);
 
 
         /*-------- Set visibility for the different components --------*/
         //Hide the Move parameters
         rowMoveParam.setVisibility(View.INVISIBLE);
+        layoutAngle.setVisibility(View.INVISIBLE);
 
         //Hide the LogOut button
         buttonLogOutCM.setVisibility(View.INVISIBLE);
@@ -151,6 +175,17 @@ public class MainActivity extends ActionBarActivity {
         buttonSend.setVisibility(View.INVISIBLE);
         buttonLogOutRobot.setVisibility(View.INVISIBLE);
         buttonUpdateRobotList.setVisibility(View.INVISIBLE);
+
+        //Set visibility for the gyrosensor
+        textViewAngle.setVisibility(View.INVISIBLE);
+        buttonInitAngle.setVisibility(View.VISIBLE);
+        buttonSetAngle.setVisibility(View.INVISIBLE);
+
+        //Hide the angle Layout
+        layoutAngle.setVisibility(View.INVISIBLE);
+
+        //Create the SensorManager
+        sManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         /**
          * Method that enables the tablet to be connected to the comManager
@@ -281,6 +316,7 @@ public class MainActivity extends ActionBarActivity {
 
                         //Hide the robot's parameters
                         rowMoveParam.setVisibility(View.INVISIBLE);
+                        layoutAngle.setVisibility(View.INVISIBLE);
                         buttonSend.setVisibility(View.INVISIBLE);
                         textViewChosenOrder.setText("");
                         textViewIPRobot.setText("");
@@ -319,7 +355,6 @@ public class MainActivity extends ActionBarActivity {
                                 jsonReceived                        = appTab.sendOrder(jsonOrder);
 
                                 Log.i("JSON - LogInRobot", jsonReceived.toString());
-                                Log.i("JSON - test", String.valueOf(jsonReceived.get("OrderAccepted").toString().equals("true")));
 
                                 //If the tablet is connected to the robot
                                 if ((jsonReceived.get("MsgType").equals("Ack") == true) && (jsonReceived.get("OrderAccepted").toString().equals("true") == true)) {
@@ -384,6 +419,7 @@ public class MainActivity extends ActionBarActivity {
 
                         //Hide the move parameters
                         rowMoveParam.setVisibility(View.INVISIBLE);
+                        layoutAngle.setVisibility(View.INVISIBLE);
                         buttonSend.setVisibility(View.INVISIBLE);
 
                         //Create the JSON object
@@ -477,6 +513,7 @@ public class MainActivity extends ActionBarActivity {
                                 buttonLogInRobot.setVisibility(View.VISIBLE);
                                 buttonLogOutRobot.setVisibility(View.INVISIBLE);
                                 rowMoveParam.setVisibility(View.INVISIBLE);
+                                layoutAngle.setVisibility(View.INVISIBLE);
                                 buttonSend.setVisibility(View.INVISIBLE);
 
                                 //Erase the edtiText and the feature list
@@ -541,10 +578,12 @@ public class MainActivity extends ActionBarActivity {
                         //If the selected order is "Move", display the parameters' editText
                         if(strChosenOrder.equals("Move")){
                             rowMoveParam.setVisibility(View.VISIBLE);
+                            layoutAngle.setVisibility(View.VISIBLE);
                         }
 
                         else{
                             rowMoveParam.setVisibility(View.INVISIBLE);
+                            layoutAngle.setVisibility(View.INVISIBLE);
                         }
 
                     }
@@ -599,6 +638,37 @@ public class MainActivity extends ActionBarActivity {
                 }
         );
 
+        buttonInitAngle.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Change visibility of the buttons
+                buttonSend.setVisibility(View.INVISIBLE);
+                buttonSetAngle.setVisibility(View.VISIBLE);
+                buttonInitAngle.setVisibility(View.INVISIBLE);
+                textViewAngle.setVisibility(View.VISIBLE);
+
+                //Get the angle's value
+                fInitAngle      = values[2] * 57.2957795f;
+            }
+        });
+
+        buttonSetAngle.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Change visibility of the buttons
+                buttonSend.setVisibility(View.VISIBLE);
+                buttonInitAngle.setVisibility(View.VISIBLE);
+                buttonSetAngle.setVisibility(View.INVISIBLE);
+
+                //Calculate the angle
+                fEndAngle       = values[2] * 57.2957795f;
+                iCalcAngle      = (int) (fEndAngle - fInitAngle);
+
+                //Display the final rotation value
+                editTextAngleVal.setText(String.valueOf(iCalcAngle));
+            }
+        });
+
     }
 
 
@@ -623,5 +693,71 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //when this Activity starts
+    @Override
+    protected void onResume() {
+        super.onResume();
+    /*register the sensor listener to listen to the gyroscope sensor, use the
+    callbacks defined in this class, and gather the sensor information as quick
+    as possible*/
+
+        sManager.registerListener(this, sManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        sManager.registerListener(this, sManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    float Rot[] = null; //for gravity rotational data
+    //don't use R because android uses that for other stuff
+    float I[] = null; //for magnetic rotational data
+    float accels[] = new float[3];
+    float mags[] = new float[3];
+    float[] values = new float[3];
+
+    float azimuth;
+    float roll;
+    float pitch;
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        //below commented code - junk - unreliable is never populated
+        //if sensor is unreliable, return void
+        //if (event.accuracy == SensorManager.SENSOR_STATUS_UNRELIABLE)
+        //{
+        //    return;
+        //}
+
+        switch (event.sensor.getType()) {
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                mags = event.values.clone();
+                break;
+            case Sensor.TYPE_ACCELEROMETER:
+                accels = event.values.clone();
+                break;
+        }
+
+        if (mags != null && accels != null) {
+            Rot = new float[9];
+            I = new float[9];
+            SensorManager.getRotationMatrix(Rot, I, accels, mags);
+            // Correct if screen is in Landscape
+
+            float[] outR = new float[9];
+            SensorManager.remapCoordinateSystem(Rot, SensorManager.AXIS_X, SensorManager.AXIS_Z, outR);
+            SensorManager.getOrientation(outR, values);
+
+            roll = values[2] * 57.2957795f;
+
+            mags = null; //retrigger the loop when things are repopulated
+            accels = null; ////retrigger the loop when things are repopulated
+
+            iCalcAngle      = (int) (roll - fInitAngle);
+            textViewAngle.setText(getResources().getText(R.string.gyroBlock_AngleText) +  " " + String.valueOf(iCalcAngle));
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }

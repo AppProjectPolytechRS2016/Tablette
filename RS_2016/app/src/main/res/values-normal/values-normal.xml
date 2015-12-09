@@ -31,8 +31,9 @@
     <dimen name="editText_parameter_height">35dp</dimen>
 
     <!-- Size for button -->
-    <dimen name="button_width">120dp</dimen>
+    <dimen name="button_width">150dp</dimen>
     <dimen name="button_height">40dp</dimen>
+    <dimen name="button_width_update">300dp</dimen>
 
     <!-- Size for pictures -->
     <dimen name="picture_height">240dp</dimen>

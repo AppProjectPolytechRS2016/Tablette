@@ -27,8 +27,14 @@
     <string name="orderBlock_ChoosenOrder">Ordre choisi :</string>
     <string name="orderBlock_buttonSend">Envoyer</string>
 
+    <!-- Strings for the GyroBlock -->
+    <string name="gyroBlock_ButtonStart">Démarrer</string>
+    <string name="gyroBlock_ButtonStop">Valider</string>
+    <string name="gyroBlock_AngleText">Angle mesuré en degré :</string>
+    <string name="gyroBlock_AngleDesc">Appuyez sur "Démarrer" pour lancer l\'acquisition de l\'angle de rotation, puis faites tourner la tablette (peut importe le sens). Appuyez sur "Valider" pour sélectionner l\'angle.</string>
+
     <!--Strings to display in Toast pop up -->
-    <string name="toast_ip_Msg1">La tablette est maintenant connectée au gestionnaire de communication.></string>
+    <string name="toast_ip_Msg1">La tablette est maintenant connectée au gestionnaire de communication.</string>
     <string name="toast_ip_Msg2">La connexion au gestionnaire de communication a échouée.</string>
     <string name="toast_ip_Msg3">Adresse IP renseignée invalide.</string>
     <string name="toast_ip_Msg4">Tablette est maintenant déconnectée du gestionnaire de communication.</string>

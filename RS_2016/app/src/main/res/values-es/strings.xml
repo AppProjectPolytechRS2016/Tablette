@@ -28,6 +28,13 @@
     <string name="orderBlock_YValue">Y en cm</string>
     <string name="orderBlock_buttonSend">Enviar</string>
 
+    <!-- Strings for the GyroBlock -->
+    <string name="gyroBlock_ButtonStart">Empezar</string>
+    <string name="gyroBlock_ButtonStop">Seleccionar</string>
+    <string name="gyroBlock_AngleText">Ángulo medido en grados :</string>
+    <string name="gyroBlock_AngleDesc">Apretar "Empezar" para lanzar la adquisición del ángulo de rotación, luego haga girar la tableta (puede importa la dirección). Apretar "Seleccionar" para seleccionar el ángulo.</string>
+
+    <!--Strings to display in Toast pop up -->
     <string name="toast_ip_Msg1">La tableta es conectada al Gerente de Comunicación.</string>
     <string name="toast_ip_Msg2">La conexión al Gerente de Comunicación fue suspendida.</string>
     <string name="toast_ip_Msg3">La dirección IP es inválida</string>

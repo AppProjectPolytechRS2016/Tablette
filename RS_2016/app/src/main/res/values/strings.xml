@@ -27,6 +27,12 @@
     <string name="orderBlock_ChoosenOrder">Chosen order :</string>
     <string name="orderBlock_buttonSend">Send</string>
 
+    <!-- Strings for the GyroBlock -->
+    <string name="gyroBlock_ButtonStart">Start</string>
+    <string name="gyroBlock_ButtonStop">Set value</string>
+    <string name="gyroBlock_AngleText">Measured angle in degrees :</string>
+    <string name="gyroBlock_AngleDesc">Press "Start" to start the acquisition of the angle, then turn the tablet (the direction do not matter. Press "Set value" to select the angle.</string>
+
     <!--Strings to display in Toast pop up -->
     <string name="toast_ip_Msg1">The tablet is now connected to the Communication Manager.</string>
     <string name="toast_ip_Msg2">Failed to connect to the Communication Manager.</string>
